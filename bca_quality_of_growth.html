@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Quality of Growth — BCA Business Investigation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg:        #080C14;
+  --surface:   #0D1320;
+  --surface2:  #111827;
+  --gold:      #C9A96E;
+  --gold-dim:  rgba(201,169,110,0.15);
+  --gold-line: rgba(201,169,110,0.25);
+  --blue:      #4A9EFF;
+  --blue-dim:  rgba(74,158,255,0.10);
+  --green:     #00C896;
+  --green-dim: rgba(0,200,150,0.10);
+  --red:       #FF4D6D;
+  --red-dim:   rgba(255,77,109,0.10);
+  --text:      #F0EDE8;
+  --muted:     rgba(240,237,232,0.45);
+  --border:    rgba(240,237,232,0.07);
+  --thread:    rgba(201,169,110,0.35);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── PROGRESS ── */
+#progress {
+  position: fixed; top:0; left:0; height:2px;
+  background: linear-gradient(90deg, var(--gold), var(--blue));
+  z-index:200; width:0%; transition: width .1s linear;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:100;
+  padding: 18px 60px;
+  display: flex; align-items:center; justify-content:space-between;
+  background: rgba(8,12,20,0.85);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing:.22em; text-transform:uppercase;
+  color: var(--gold);
+}
+.nav-right {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing:.14em; text-transform:uppercase;
+  color: var(--muted);
+}
+
+/* ── INVESTIGATION THREAD ── */
+.thread-container {
+  position: relative;
+}
+.thread-container::before {
+  content:'';
+  position: absolute;
+  left: 59px; top:0; bottom:0; width:1px;
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    var(--thread) 8%,
+    var(--thread) 92%,
+    transparent 100%);
+  pointer-events: none;
+}
+
+/* ── SECTIONS ── */
+section {
+  position: relative;
+  padding: 120px 60px 100px 120px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+section.full-bleed {
+  max-width: none;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+/* Thread node */
+.thread-node {
+  position: absolute;
+  left: -61px;
+  top: 132px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 3px var(--gold-dim);
+}
+
+/* ── EYEBROW ── */
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing:.22em; text-transform:uppercase;
+  color: var(--gold); margin-bottom:24px;
+  display:flex; align-items:center; gap:12px;
+  opacity:0; transform:translateY(12px);
+  transition: all .6s ease;
+}
+.eyebrow::before { content:''; width:20px; height:1px; background:var(--gold); display:inline-block; }
+.eyebrow.vis { opacity:1; transform:translateY(0); }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display: flex; flex-direction:column; justify-content:center;
+  padding: 100px 60px 80px;
+  max-width: none;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset:0;
+  background:
+    radial-gradient(ellipse 70% 60% at 75% 30%, rgba(74,158,255,0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 50% at 20% 70%, rgba(201,169,110,0.04) 0%, transparent 65%);
+}
+.hero-grid {
+  position: absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(201,169,110,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,169,110,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.hero-inner { position:relative; z-index:2; max-width:900px; margin:0 auto; }
+.hero-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing:.22em; text-transform:uppercase;
+  color: var(--gold); margin-bottom:40px;
+  opacity:0; animation: fadeUp .8s ease .2s forwards;
+  display:flex; align-items:center; gap:12px;
+}
+.hero-tag span { background:var(--gold-dim); border:1px solid var(--gold-line); padding:3px 10px; border-radius:4px; }
+.hero-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(54px, 7vw, 96px);
+  font-weight: 900;
+  line-height: .95;
+  letter-spacing: -.03em;
+  margin-bottom: 32px;
+  opacity:0; animation: fadeUp .8s ease .4s forwards;
+}
+.hero-headline .line1 { display:block; color: var(--text); }
+.hero-headline .line2 { display:block; color: var(--gold); font-style:italic; }
+.hero-headline .line3 { display:block; color: var(--muted); font-size:.55em; font-weight:400; margin-top:12px; font-style:normal; letter-spacing:-.01em; }
+.hero-sub {
+  font-size: 17px; color: var(--muted); max-width:560px; line-height:1.8;
+  margin-bottom:56px;
+  opacity:0; animation: fadeUp .8s ease .6s forwards;
+}
+.hero-meta {
+  display:flex; gap:0; max-width:640px;
+  border:1px solid var(--border); border-radius:14px; overflow:hidden;
+  opacity:0; animation: fadeUp .8s ease .8s forwards;
+}
+.hero-meta-cell {
+  flex:1; padding:20px 24px;
+  border-right:1px solid var(--border);
+}
+.hero-meta-cell:last-child { border-right:none; }
+.hmc-label {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:6px;
+}
+.hmc-val { font-size:14px; font-weight:500; color:var(--text); }
+.scroll-cue {
+  margin-top:64px;
+  opacity:0; animation: fadeUp .8s ease 1s forwards;
+  display:flex; flex-direction:column; align-items:flex-start; gap:8px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted);
+}
+.scroll-line {
+  width:1px; height:48px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollPulse 2s ease infinite;
+}
+
+/* ── SECTION TITLE ── */
+.sec-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(30px,4vw,48px);
+  font-weight: 700; letter-spacing:-.02em; line-height:1.1;
+  margin-bottom:16px;
+  opacity:0; transform:translateY(20px);
+  transition: all .7s ease .1s;
+}
+.sec-title.vis { opacity:1; transform:translateY(0); }
+.sec-title em { font-style:italic; color:var(--gold); }
+
+.sec-body {
+  font-size:16px; color:var(--muted); max-width:600px; line-height:1.8;
+  opacity:0; transform:translateY(16px);
+  transition: all .6s ease .2s;
+}
+.sec-body.vis { opacity:1; transform:translateY(0); }
+
+.divider {
+  width:48px; height:2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  border-radius:100px; margin:20px 0;
+  opacity:0; transition: opacity .6s ease .3s;
+}
+.divider.vis { opacity:1; }
+
+/* ── INVESTIGATION FRAMEWORK ── */
+.framework {
+  display:flex; flex-direction:column; align-items:flex-start;
+  gap:0; margin-top:48px;
+}
+.fw-step {
+  display:flex; align-items:center; gap:20px;
+  opacity:0; transform:translateX(-16px);
+  transition: all .5s ease;
+}
+.fw-step.vis { opacity:1; transform:translateX(0); }
+.fw-node {
+  width:10px; height:10px; border-radius:50%;
+  background:var(--gold); flex-shrink:0;
+  box-shadow: 0 0 10px rgba(201,169,110,0.4);
+}
+.fw-label {
+  font-family:'Playfair Display',serif;
+  font-size:20px; font-weight:600; color:var(--text);
+}
+.fw-connector {
+  width:1px; height:32px; background: var(--thread);
+  margin-left:4px;
+}
+
+/* ── HYPOTHESIS CARD ── */
+.hypothesis-card {
+  background: var(--surface);
+  border: 1px solid var(--gold-line);
+  border-radius:20px; padding:48px;
+  margin-top:40px; position:relative; overflow:hidden;
+  opacity:0; transform:translateY(24px);
+  transition: all .7s ease;
+}
+.hypothesis-card.vis { opacity:1; transform:translateY(0); }
+.hypothesis-card::before {
+  content:'H';
+  position:absolute; top:-20px; right:32px;
+  font-family:'Playfair Display',serif;
+  font-size:160px; font-weight:900;
+  color: rgba(201,169,110,0.04); line-height:1;
+  pointer-events:none;
+}
+.hyp-label {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:20px;
+}
+.hyp-statement {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(20px,2.5vw,28px); font-weight:600;
+  line-height:1.4; color:var(--text); margin-bottom:20px;
+}
+.hyp-sub { font-size:14px; color:var(--muted); line-height:1.7; }
+
+/* ── KPI GRID ── */
+.kpi-grid {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:16px; margin-top:40px;
+}
+.kpi-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px; padding:24px 20px;
+  position:relative; overflow:hidden;
+  opacity:0; transform:translateY(20px) scale(.98);
+  transition: all .5s ease;
+}
+.kpi-card.vis { opacity:1; transform:translateY(0) scale(1); }
+.kpi-card::before {
+  content:''; position:absolute;
+  top:0; left:0; right:0; height:2px;
+}
+.kpi-card.c-gold::before  { background: var(--gold); }
+.kpi-card.c-blue::before  { background: var(--blue); }
+.kpi-card.c-green::before { background: var(--green); }
+.kpi-card.c-red::before   { background: var(--red); }
+.kpi-label-top {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:12px;
+}
+.kpi-val {
+  font-family:'Playfair Display',serif;
+  font-size:34px; font-weight:700; letter-spacing:-.02em; line-height:1;
+  margin-bottom:8px;
+}
+.kpi-val.gold  { color:var(--gold); }
+.kpi-val.blue  { color:var(--blue); }
+.kpi-val.green { color:var(--green); }
+.kpi-val.red   { color:var(--red); }
+.kpi-interp {
+  font-size:12px; color:var(--muted); line-height:1.55;
+  margin-top:10px; padding-top:10px;
+  border-top:1px solid var(--border);
+}
+.kpi-badge {
+  display:inline-block; margin-top:8px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; padding:2px 8px; border-radius:100px;
+}
+.badge-gold  { background:var(--gold-dim);  color:var(--gold);  border:1px solid var(--gold-line); }
+.badge-blue  { background:var(--blue-dim);  color:var(--blue);  border:1px solid rgba(74,158,255,.2); }
+.badge-green { background:var(--green-dim); color:var(--green); border:1px solid rgba(0,200,150,.2); }
+.badge-red   { background:var(--red-dim);   color:var(--red);   border:1px solid rgba(255,77,109,.2); }
+
+/* ── GROWTH CHART ── */
+.growth-cols { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:40px; }
+.chart-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:18px; padding:28px;
+  opacity:0; transform:translateY(20px);
+  transition: all .6s ease;
+}
+.chart-card.vis { opacity:1; transform:translateY(0); }
+.chart-card.full { grid-column:1/-1; }
+.chart-title {
+  font-family:'Playfair Display',serif;
+  font-size:17px; font-weight:600; margin-bottom:4px;
+}
+.chart-sub { font-size:12px; color:var(--muted); margin-bottom:24px; }
+
+/* Bar charts */
+.bar-set { display:flex; flex-direction:column; gap:14px; }
+.bar-item { display:flex; align-items:center; gap:12px; }
+.bar-lbl { font-size:12px; color:var(--muted); width:110px; flex-shrink:0; text-align:right; }
+.bar-track { flex:1; height:10px; background:rgba(255,255,255,0.04); border-radius:100px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:100px; width:0%; transition:width 1.3s cubic-bezier(.16,1,.3,1); }
+.bar-num { font-family:'JetBrains Mono',monospace; font-size:12px; width:52px; text-align:right; flex-shrink:0; }
+
+/* ── AHA MOMENT ── */
+.aha-section {
+  background: var(--surface);
+  border:1px solid var(--gold-line);
+  border-radius:24px; padding:56px 48px;
+  margin-top:40px; position:relative; overflow:hidden;
+  opacity:0; transform:translateY(24px);
+  transition: all .7s ease;
+}
+.aha-section.vis { opacity:1; transform:translateY(0); }
+.aha-section::before {
+  content:'';
+  position:absolute; top:-120px; right:-120px;
+  width:400px; height:400px;
+  background:radial-gradient(circle, rgba(201,169,110,0.06) 0%, transparent 65%);
+  pointer-events:none;
+}
+.aha-label {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:24px;
+  display:flex; align-items:center; gap:10px;
+}
+.aha-label::before { content:''; width:20px; height:1px; background:var(--gold); display:inline-block; }
+.aha-numbers { display:flex; gap:48px; margin:32px 0; align-items:flex-end; }
+.aha-num-block {}
+.aha-num {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(42px,5vw,64px); font-weight:900;
+  letter-spacing:-.04em; line-height:1;
+}
+.aha-num.gold { color:var(--gold); }
+.aha-num.blue { color:var(--blue); }
+.aha-num-label { font-size:12px; color:var(--muted); margin-top:6px; }
+.aha-arrow { font-size:28px; color:var(--muted); margin-bottom:16px; }
+.aha-insight {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(18px,2vw,24px); font-weight:600;
+  color:var(--text); line-height:1.4; max-width:560px;
+  border-left:3px solid var(--gold); padding-left:20px;
+  margin-top:24px;
+}
+.aha-body { font-size:14px; color:var(--muted); max-width:580px; line-height:1.75; margin-top:16px; }
+
+/* ── CASA MOAT ── */
+.moat-card {
+  background:linear-gradient(135deg, var(--surface) 0%, rgba(201,169,110,0.04) 100%);
+  border:1px solid var(--gold-line);
+  border-radius:24px; padding:48px;
+  margin-top:40px; display:grid; grid-template-columns:1fr 1fr; gap:48px;
+  opacity:0; transform:translateY(24px);
+  transition: all .7s ease;
+}
+.moat-card.vis { opacity:1; transform:translateY(0); }
+.moat-big {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(60px,6vw,88px); font-weight:900;
+  letter-spacing:-.04em; line-height:1;
+  color:var(--gold); margin:16px 0;
+}
+.moat-context { font-size:14px; color:var(--muted); line-height:1.7; }
+.moat-right { display:flex; flex-direction:column; justify-content:center; gap:20px; }
+.moat-point {
+  display:flex; gap:16px; align-items:flex-start;
+  padding:16px; background:var(--gold-dim);
+  border:1px solid var(--gold-line); border-radius:12px;
+}
+.moat-icon { font-size:20px; flex-shrink:0; }
+.moat-text { font-size:13px; color:var(--text); line-height:1.6; }
+.moat-text strong { color:var(--gold); }
+
+/* ── SCORECARD ── */
+.scorecard {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:20px; margin-top:40px;
+}
+.score-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:18px; padding:28px 24px; text-align:center;
+  opacity:0; transform:translateY(20px);
+  transition: all .5s ease;
+}
+.score-card.vis { opacity:1; transform:translateY(0); }
+.score-metric {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:16px;
+}
+.score-val {
+  font-family:'Playfair Display',serif;
+  font-size:38px; font-weight:700; letter-spacing:-.02em; line-height:1;
+  margin-bottom:8px;
+}
+.score-verdict {
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+  padding:4px 12px; border-radius:100px; margin-top:12px;
+}
+.sv-pass { background:var(--green-dim); color:var(--green); border:1px solid rgba(0,200,150,.2); }
+.sv-strong { background:rgba(74,158,255,.1); color:var(--blue); border:1px solid rgba(74,158,255,.2); }
+.score-note { font-size:12px; color:var(--muted); line-height:1.55; margin-top:12px; }
+
+/* ── VERDICT ── */
+.verdict-block {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:24px; padding:56px 48px;
+  margin-top:40px; position:relative; overflow:hidden;
+  opacity:0; transform:translateY(24px);
+  transition: all .7s ease;
+}
+.verdict-block.vis { opacity:1; transform:translateY(0); }
+.verdict-block::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg, var(--gold), var(--blue), var(--green));
+}
+.verdict-block::after {
+  content:'VERDICT';
+  position:absolute; bottom:-30px; right:40px;
+  font-family:'Playfair Display',serif;
+  font-size:120px; font-weight:900;
+  color:rgba(201,169,110,0.03); pointer-events:none;
+}
+.verdict-hypothesis {
+  display:flex; gap:20px; align-items:flex-start;
+  padding:20px 24px; border-radius:12px;
+  background:var(--red-dim); border:1px solid rgba(255,77,109,.2);
+  margin-bottom:24px;
+}
+.vh-tag {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--red); padding:3px 8px;
+  background:rgba(255,77,109,.12); border-radius:4px;
+  flex-shrink:0; margin-top:2px;
+}
+.vh-text { font-size:14px; color:var(--muted); line-height:1.6; font-style:italic; }
+.verdict-finding {
+  display:flex; gap:20px; align-items:flex-start;
+  padding:20px 24px; border-radius:12px;
+  background:var(--green-dim); border:1px solid rgba(0,200,150,.2);
+  margin-bottom:32px;
+}
+.vf-tag {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--green); padding:3px 8px;
+  background:rgba(0,200,150,.12); border-radius:4px;
+  flex-shrink:0; margin-top:2px;
+}
+.vf-text { font-size:14px; color:var(--text); line-height:1.65; }
+.verdict-conclusion {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(22px,2.5vw,32px); font-weight:700;
+  letter-spacing:-.02em; line-height:1.25; color:var(--text);
+  border-left:3px solid var(--gold); padding-left:24px;
+}
+.verdict-conclusion em { font-style:italic; color:var(--gold); }
+
+/* ── STRATEGIC INSIGHT ── */
+.insight-hero {
+  text-align:center; padding:80px 48px;
+  opacity:0; transform:translateY(24px);
+  transition: all .7s ease;
+}
+.insight-hero.vis { opacity:1; transform:translateY(0); }
+.insight-quote {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(24px,3.5vw,48px); font-weight:700;
+  letter-spacing:-.03em; line-height:1.2;
+  color:var(--text); max-width:720px; margin:0 auto 32px;
+}
+.insight-quote em { font-style:italic; color:var(--gold); }
+.insight-body { font-size:16px; color:var(--muted); max-width:560px; margin:0 auto; line-height:1.8; }
+
+/* ── METHODOLOGY ── */
+.method-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:40px; }
+.method-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:14px; padding:24px;
+  opacity:0; transform:translateY(16px);
+  transition: all .5s ease;
+}
+.method-card.vis { opacity:1; transform:translateY(0); }
+.method-card.full { grid-column:1/-1; }
+.mc-label {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:12px;
+}
+.mc-list { list-style:none; display:flex; flex-direction:column; gap:8px; }
+.mc-list li {
+  font-size:13px; color:var(--muted); line-height:1.5;
+  padding-left:14px; position:relative;
+}
+.mc-list li::before {
+  content:'→'; position:absolute; left:0;
+  color:var(--gold); font-size:11px;
+}
+.mc-body { font-size:13px; color:var(--muted); line-height:1.7; }
+
+/* ── ABOUT ── */
+.about-card {
+  background: var(--surface);
+  border:1px solid var(--gold-line);
+  border-radius:24px; padding:48px;
+  display:grid; grid-template-columns:auto 1fr; gap:40px; align-items:center;
+  margin-top:40px;
+  opacity:0; transform:translateY(20px);
+  transition: all .7s ease;
+}
+.about-card.vis { opacity:1; transform:translateY(0); }
+.about-avatar {
+  width:80px; height:80px; border-radius:50%;
+  background:var(--gold-dim); border:2px solid var(--gold-line);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Playfair Display',serif;
+  font-size:28px; font-weight:700; color:var(--gold);
+  flex-shrink:0;
+}
+.about-name {
+  font-family:'Playfair Display',serif;
+  font-size:24px; font-weight:700; color:var(--text); margin-bottom:4px;
+}
+.about-title {
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:16px;
+}
+.about-desc { font-size:14px; color:var(--muted); line-height:1.7; max-width:520px; }
+
+/* ── FOOTER ── */
+footer {
+  border-top:1px solid var(--border);
+  padding:56px 60px 48px;
+  text-align:center;
+}
+.footer-prepared {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:12px;
+}
+.footer-name {
+  font-family:'Playfair Display',serif;
+  font-size:28px; font-weight:700; color:var(--text); margin-bottom:4px;
+}
+.footer-role {
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:40px;
+}
+.footer-cta {
+  display:inline-block;
+  font-family:'Playfair Display',serif;
+  font-size:18px; font-weight:600; font-style:italic;
+  color:var(--text); margin-bottom:24px;
+}
+.footer-cta em { color:var(--gold); font-style:normal; }
+.footer-btn {
+  display:inline-block;
+  background:var(--gold); color:var(--bg);
+  padding:14px 36px; border-radius:100px;
+  font-family:'Inter',sans-serif;
+  font-size:13px; font-weight:600; letter-spacing:.04em;
+  cursor:pointer; border:none; text-decoration:none;
+}
+.footer-copyright {
+  margin-top:48px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; letter-spacing:.12em; text-transform:uppercase;
+  color:rgba(240,237,232,0.2);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes scrollPulse {
+  0%,100% { opacity:.3; transform:scaleY(.8); }
+  50%      { opacity:1; transform:scaleY(1); }
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px) {
+  nav { padding:16px 24px; }
+  section { padding:80px 24px 60px 24px; }
+  section.full-bleed { padding-left:24px; padding-right:24px; }
+  #hero { padding:100px 24px 60px; }
+  .thread-container::before { display:none; }
+  .thread-node { display:none; }
+  .kpi-grid { grid-template-columns:1fr 1fr; }
+  .growth-cols { grid-template-columns:1fr; }
+  .moat-card { grid-template-columns:1fr; gap:28px; }
+  .scorecard { grid-template-columns:1fr; }
+  .method-grid { grid-template-columns:1fr; }
+  .about-card { grid-template-columns:1fr; gap:24px; text-align:center; }
+  .about-avatar { margin:0 auto; }
+  footer { padding:48px 24px; }
+  .hero-meta { flex-direction:column; }
+  .hero-meta-cell { border-right:none; border-bottom:1px solid var(--border); }
+  .hero-meta-cell:last-child { border-bottom:none; }
+  .aha-numbers { flex-direction:column; gap:24px; }
+  .verdict-block { padding:36px 28px; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav>
+  <div class="nav-logo">Business Investigation</div>
+  <div class="nav-right">Muhamad Reva Riza Akbar</div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero" class="full-bleed">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">
+      <span>Independent Business Investigation</span>
+      BCA · 2024–2025 Data
+    </div>
+    <h1 class="hero-headline">
+      <span class="line1">Growth is easy.</span>
+      <span class="line2">Quality growth is rare.</span>
+      <span class="line3">What BCA's Numbers Reveal About Sustainable Scaling</span>
+    </h1>
+    <p class="hero-sub">Many companies grow revenue while sacrificing efficiency, profitability, or operational quality. BCA presents a different story — and this investigation tests whether that story holds up to scrutiny.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-cell">
+        <div class="hmc-label">Subject</div>
+        <div class="hmc-val">Bank Central Asia (BCA)</div>
+      </div>
+      <div class="hero-meta-cell">
+        <div class="hmc-label">Focus</div>
+        <div class="hmc-val">Growth Quality Analysis</div>
+      </div>
+      <div class="hero-meta-cell">
+        <div class="hmc-label">Analyst</div>
+        <div class="hmc-val">Muhamad Reva Riza Akbar</div>
+      </div>
+      <div class="hero-meta-cell">
+        <div class="hmc-label">Data Basis</div>
+        <div class="hmc-val">Public Disclosures · 2024–25</div>
+      </div>
+    </div>
+    <div class="scroll-cue">
+      <span>Begin Investigation</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</section>
+
+<div class="thread-container">
+
+<!-- ══ S2: OBJECTIVE ══ -->
+<section id="s2">
+  <div class="thread-node"></div>
+  <div class="eyebrow animate-el">Section 02 · Investigation Objective</div>
+  <h2 class="sec-title animate-el">The central <em>question.</em></h2>
+  <div class="divider animate-el"></div>
+  <p class="sec-body animate-el">Has BCA's growth translated into stronger business quality — or has it come at the expense of efficiency, profitability, and operational integrity?</p>
+
+  <div class="framework">
+    <div class="fw-step animate-el" style="transition-delay:.0s"><div class="fw-node"></div><div class="fw-label">Question</div></div>
+    <div class="fw-connector animate-el" style="transition-delay:.05s"></div>
+    <div class="fw-step animate-el" style="transition-delay:.1s"><div class="fw-node"></div><div class="fw-label">Evidence</div></div>
+    <div class="fw-connector animate-el" style="transition-delay:.15s"></div>
+    <div class="fw-step animate-el" style="transition-delay:.2s"><div class="fw-node"></div><div class="fw-label">Analysis</div></div>
+    <div class="fw-connector animate-el" style="transition-delay:.25s"></div>
+    <div class="fw-step animate-el" style="transition-delay:.3s"><div class="fw-node"></div><div class="fw-label">Findings</div></div>
+    <div class="fw-connector animate-el" style="transition-delay:.35s"></div>
+    <div class="fw-step animate-el" style="transition-delay:.4s"><div class="fw-node"></div><div class="fw-label">Strategic Insight</div></div>
+    <div class="fw-connector animate-el" style="transition-delay:.45s"></div>
+    <div class="fw-step animate-el" style="transition-delay:.5s"><div class="fw-node"></div><div class="fw-label">Verdict</div></div>
+  </div>
+</section>
+
+<!-- ══ S3: HYPOTHESIS ══ -->
+<section id="s3">
+  <div class="thread-node"></div>
+  <div class="eyebrow animate-el">Section 03 · Initial Hypothesis</div>
+  <h2 class="sec-title animate-el">Before the <em>evidence.</em></h2>
+  <div class="divider animate-el"></div>
+  <p class="sec-body animate-el">Every investigation begins with a testable hypothesis. This is the assumption we set out to either confirm or challenge.</p>
+
+  <div class="hypothesis-card animate-el">
+    <div class="hyp-label">Hypothesis H₁</div>
+    <div class="hyp-statement">"Rapid growth in a large financial institution typically signals trade-offs — efficiency deteriorates, costs rise faster than revenue, and profitability per unit of capital weakens."</div>
+    <div class="hyp-sub">This is the most common pattern observed across high-growth banking institutions. The investigation tests whether BCA follows this trajectory — or represents a structural exception.</div>
+  </div>
+</section>
+
+<!-- ══ S4: EVIDENCE DASHBOARD ══ -->
+<section id="s4">
+  <div class="thread-node"></div>
+  <div class="eyebrow animate-el">Section 04 · Evidence Dashboard</div>
+  <h2 class="sec-title animate-el">The <em>numbers</em> under examination.</h2>
+  <div class="divider animate-el"></div>
+  <p class="sec-body animate-el">Eight critical metrics. Each interpreted — not merely displayed — for what it reveals about business quality.</p>
+
+  <div class="kpi-grid">
+    <div class="kpi-card c-blue animate-el" style="transition-delay:.0s">
+      <div class="kpi-label-top">Loan Portfolio</div>
+      <div class="kpi-val blue">IDR 993T</div>
+      <span class="kpi-badge badge-blue">+7.7%–11% Growth</span>
+      <div class="kpi-interp">Solid expansion without the recklessness of overcrediting. Growth pace suggests disciplined underwriting — not volume-chasing.</div>
+    </div>
+    <div class="kpi-card c-gold animate-el" style="transition-delay:.08s">
+      <div class="kpi-label-top">Deposit Growth</div>
+      <div class="kpi-val gold">+5.6%</div>
+      <span class="kpi-badge badge-gold">Controlled Pace</span>
+      <div class="kpi-interp">Growing slower than loans signals confidence in existing liquidity — a structurally healthy sign for asset-liability management.</div>
+    </div>
+    <div class="kpi-card c-gold animate-el" style="transition-delay:.16s">
+      <div class="kpi-label-top">CASA Ratio</div>
+      <div class="kpi-val gold">83.4%</div>
+      <span class="kpi-badge badge-gold">Strategic Moat</span>
+      <div class="kpi-interp">One of the highest in Indonesian banking. This is BCA's structural cost advantage — funding growth with low-cost, sticky deposits.</div>
+    </div>
+    <div class="kpi-card c-green animate-el" style="transition-delay:.24s">
+      <div class="kpi-label-top">Net Profit</div>
+      <div class="kpi-val green">IDR 57.5T</div>
+      <span class="kpi-badge badge-green">Profit Resilience</span>
+      <div class="kpi-interp">Profit at this scale — during a period of active growth investment — suggests the growth engine is paying for itself.</div>
+    </div>
+    <div class="kpi-card c-blue animate-el" style="transition-delay:.32s">
+      <div class="kpi-label-top">Digital Transactions</div>
+      <div class="kpi-val blue">23B</div>
+      <span class="kpi-badge badge-blue">+24% YoY</span>
+      <div class="kpi-interp">Transaction volume growing 3× faster than loan growth signals a platform effect — customers engaging beyond traditional banking.</div>
+    </div>
+    <div class="kpi-card c-green animate-el" style="transition-delay:.40s">
+      <div class="kpi-label-top">Cost-to-Income Ratio</div>
+      <div class="kpi-val green">49.09%</div>
+      <span class="kpi-badge badge-green">Improving ↓ from 52.96%</span>
+      <div class="kpi-interp">Efficiency is getting better, not worse. Every rupiah of cost is generating more income — the opposite of what growth typically causes.</div>
+    </div>
+    <div class="kpi-card c-blue animate-el" style="transition-delay:.48s">
+      <div class="kpi-label-top">Return on Assets</div>
+      <div class="kpi-val blue">3.42%</div>
+      <span class="kpi-badge badge-blue">High for Sector</span>
+      <div class="kpi-interp">ROA of 3.42% is strong for a bank of this asset base. It signals effective deployment of capital — not just scale for scale's sake.</div>
+    </div>
+    <div class="kpi-card c-gold animate-el" style="transition-delay:.56s">
+      <div class="kpi-label-top">Return on Equity</div>
+      <div class="kpi-val gold">13.40%</div>
+      <span class="kpi-badge badge-gold">Shareholder Return</span>
+      <div class="kpi-interp">Equity holders are generating meaningful returns. ROE at this level during expansion typically signals that management is allocating capital wisely.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ S5: GROWTH ANALYSIS ══ -->
+<section id="s5">
+  <div class="thread-node"></div>
+  <div class="eyebrow animate-el">Section 05 · Growth Analysis</div>
+  <h2 class="sec-title animate-el">Reading the <em>growth story</em> correctly.</h2>
+  <div class="divider animate-el"></div>
+  <p class="sec-body animate-el">Growth numbers alone tell you nothing. The pattern of growth — what grows, what doesn't, and at what pace — is where the real signal lives.</p>
+
+  <div class="growth-cols">
+    <div class="chart-card animate-el">
+      <div class="chart-title">Growth Rate Comparison</div>
+      <div class="chart-sub">Relative growth across key business dimensions</div>
+      <div class="bar-set">
+        <div class="bar-item">
+          <div class="bar-lbl">Digital Txn</div>
+          <div class="bar-track"><div class="bar-fill" data-w="100" style="background:var(--blue);"></div></div>
+          <div class="bar-num" style="color:var(--blue)">+24%</div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-lbl">Loan Growth</div>
+          <div class="bar-track"><div class="bar-fill" data-w="46" style="background:var(--gold);"></div></div>
+          <div class="bar-num" style="color:var(--gold)">+11%</div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-lbl">Deposit Growth</div>
+          <div class="bar-track"><div class="bar-fill" data-w="23" style="background:var(--green);"></div></div>
+          <div class="bar-num" style="color:var(--green)">+5.6%</div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-lbl">CIR Change</div>
+          <div class="bar-track"><div class="bar-fill" data-w="16" style="background:var(--red);"></div></div>
+          <div class="bar-num" style="color:var(--red)">−3.87pt</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card animate-el" style="transition-delay:.1s">
+      <div class="chart-title">Efficiency vs. Scale</div>
+      <div class="chart-sub">Cost-to-income ratio trajectory</div>
+      <div style="position:relative; padding:20px 0;">
+        <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+          <defs>
+            <linearGradient id="cir-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00C896" stop-opacity=".2"/>
+              <stop offset="100%" stop-color="#00C896" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <line x1="40" y1="20" x2="300" y2="20" stroke="rgba(240,237,232,.05)" stroke-width="1"/>
+          <line x1="40" y1="60" x2="300" y2="60" stroke="rgba(240,237,232,.05)" stroke-width="1"/>
+          <line x1="40" y1="100" x2="300" y2="100" stroke="rgba(240,237,232,.05)" stroke-width="1"/>
+          <line x1="40" y1="140" x2="300" y2="140" stroke="rgba(240,237,232,.05)" stroke-width="1"/>
+          <text x="35" y="23" text-anchor="end" font-size="9" fill="rgba(240,237,232,.3)" font-family="JetBrains Mono">55%</text>
+          <text x="35" y="63" text-anchor="end" font-size="9" fill="rgba(240,237,232,.3)" font-family="JetBrains Mono">52%</text>
+          <text x="35" y="103" text-anchor="end" font-size="9" fill="rgba(240,237,232,.3)" font-family="JetBrains Mono">50%</text>
+          <text x="35" y="143" text-anchor="end" font-size="9" fill="rgba(240,237,232,.3)" font-family="JetBrains Mono">48%</text>
+          <path d="M60,40 L140,55 L220,72 L300,115" fill="url(#cir-grad)"/>
+          <path d="M60,40 L140,55 L220,72 L300,115" fill="none" stroke="#00C896" stroke-width="2.5" stroke-linejoin="round"/>
+          <circle cx="60"  cy="40"  r="4" fill="#00C896"/>
+          <circle cx="140" cy="55"  r="4" fill="#00C896"/>
+          <circle cx="220" cy="72"  r="4" fill="#00C896"/>
+          <circle cx="300" cy="115" r="4" fill="#00C896"/>
+          <text x="60"  y="155" text-anchor="middle" font-size="9" fill="rgba(240,237,232,.4)" font-family="Inter">2021</text>
+          <text x="140" y="155" text-anchor="middle" font-size="9" fill="rgba(240,237,232,.4)" font-family="Inter">2022</text>
+          <text x="220" y="155" text-anchor="middle" font-size="9" fill="rgba(240,237,232,.4)" font-family="Inter">2023</text>
+          <text x="300" y="155" text-anchor="middle" font-size="9" fill="rgba(240,237,232,.4)" font-family="Inter">2024</text>
+          <text x="300" y="105" text-anchor="middle" font-size="9" fill="#00C896" font-family="JetBrains Mono">49.09%</text>
+        </svg>
+        <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:8px;">Cost-to-Income declining = efficiency improving as BCA scales</div>
+      </div>
+    </div>
+
+    <div class="chart-card full animate-el" style="transition-delay:.2s">
+      <div class="chart-title">BCA Mobile Ecosystem Scale</div>
+      <div class="chart-sub">Digital engagement — the platform BCA is quietly building beyond its balance sheet</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:8px;">
+        <div style="text-align:center;padding:24px;background:var(--blue-dim);border:1px solid rgba(74,158,255,.15);border-radius:14px;">
+          <div style="font-family:'Playfair Display',serif;font-size:42px;font-weight:700;color:var(--blue);letter-spacing:-.03em;line-height:1;">31M+</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5;">BCA Mobile<br>Active Users</div>
+        </div>
+        <div style="text-align:center;padding:24px;background:var(--gold-dim);border:1px solid var(--gold-line);border-radius:14px;">
+          <div style="font-family:'Playfair Display',serif;font-size:42px;font-weight:700;color:var(--gold);letter-spacing:-.03em;line-height:1;">23B</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5;">Digital Transactions<br>Processed</div>
+        </div>
+        <div style="text-align:center;padding:24px;background:var(--green-dim);border:1px solid rgba(0,200,150,.2);border-radius:14px;">
+          <div style="font-family:'Playfair Display',serif;font-size:42px;font-weight:700;color:var(--green);letter-spacing:-.03em;line-height:1;">+24%</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5;">Digital Growth<br>Year-on-Year</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ S6: AHA MOMENT ══ -->
+<section id="s6">
+  <div class="thread-node"></div>
+  <div class="eyebrow animate-el">Section 06 · The Hidden Pattern</div>
+  <h2 class="sec-title animate-el">The signal hiding in <em>plain sight.</em></h2>
+  <div class="divider animate-el"></div>
+  <p class="sec-body animate-el">One data point, when placed next to another, reveals something the standalone numbers never could.</p>
+
+  <div class="aha-section animate-el">
+    <div class="aha-label">The Aha Moment</div>
+    <div class="aha-numbers">
+      <div class="aha-num-block">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Balance-Sheet Growth</div>
+        <div class="aha-num gold">+11%</div>
+        <div class="aha-num-label">Loan portfolio expansion</div>
+      </div>
+      <div class="aha-arrow">vs</div>
+      <div class="aha-num-block">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Digital Activity Growth</div>
+        <div class="aha-num blue">+24%</div>
+        <div class="aha-num-label">Transaction frequency YoY</div>
+      </div>
+    </div>
+    <div class="aha-insight">
+      Digital engagement is growing at 2.2× the pace of balance-sheet expansion.
+    </div>
+    <div class="aha-body">
+      This is not a minor observation. It signals that BCA's customers are deepening their relationship with the platform — transacting more, engaging more, relying more — even without proportional growth in traditional banking products. In platform economics, this is the precursor to monetization at scale. BCA is not just growing a bank. It is growing a financial operating system that its customers use for daily life. The 23 billion transactions are not a vanity metric — they are evidence of a behavioral lock-in that competitors cannot easily replicate with rate offers or promotional campaigns.
+    </div>
+  </div>
+</section>
+
+<!-- ══ S7: CASA MOAT ══ -->
+<section id="s7">
+  <div class="thread-node"></div>
+  <div class="eyebrow animate-el">Section 07 · The Real Competitive Advantage</div>
+  <h2 class="sec-title animate-el">Not what it grows. <em>How</em> it grows.</h2>
+  <div class="divider animate-el"></div>
+  <p class="sec-body animate-el">BCA's true strength is not a metric. It is a structural condition that makes growth fundamentally cheaper for BCA than for almost any peer.</p>
+
+  <div class="moat-card animate-el">
+    <div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">CASA Ratio</div>
+      <div class="moat-big">83.4%</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:16px;">Current Accounts + Savings Accounts<br>as % of Total Deposits</div>
+      <div class="moat-context">
+        CASA deposits are low-cost by nature — customers park money in checking and savings accounts that pay minimal interest. When 83.4% of your entire deposit base is this type of funding, your cost of funds becomes structurally lower than banks that rely on time deposits or wholesale funding. This is not a quarterly achievement. It is a competitive moat built over decades of customer habit and trust.
+      </div>
+    </div>
+    <div class="moat-right">
+      <div class="moat-point">
+        <div class="moat-icon">🏛</div>
+        <div class="moat-text"><strong>Cost of Funds Advantage:</strong> Lower deposit costs mean BCA can price loans competitively without sacrificing margin — a structural edge competitors cannot easily match.</div>
+      </div>
+      <div class="moat-point">
+        <div class="moat-icon">🔒</div>
+        <div class="moat-text"><strong>Behavioral Lock-In:</strong> CASA customers don't just deposit — they transact. 23 billion transactions annually means BCA is the default financial hub for millions of Indonesians.</div>
+      </div>
+      <div class="moat-point">
+        <div class="moat-icon">📈</div>
+        <div class="moat-text"><strong>Funding Growth Without Dilution:</strong> BCA funds its IDR 993 trillion loan book primarily with low-cost deposits — preserving margins even as the book grows.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ S8: OPERATIONAL QUALITY ══ -->
+<section id="s8">
+  <div class="thread-node"></div>
+  <div class="eyebrow animate-el">Section 08 · Operational Quality Test</div>
+  <h2 class="sec-title animate-el">Did growth <em>damage</em> the business?</h2>
+  <div class="divider animate-el"></div>
+  <p class="sec-body animate-el">Three tests. Each one designed to detect whether rapid expansion came at the cost of operational integrity.</p>
+
+  <div class="scorecard">
+    <div class="score-card animate-el" style="transition-delay:.0s">
+      <div class="score-metric">Test 01 · Efficiency</div>
+      <div class="score-val" style="color:var(--green);">49.09%</div>
+      <div style="font-size:12px;color:var(--muted);">Cost-to-Income Ratio</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin:8px 0;">Was: 52.96%</div>
+      <span class="score-verdict sv-pass">✓ Efficiency Improved</span>
+      <div class="score-note">Cost efficiency improved by ~380 basis points during a period of active growth investment. This is the opposite of the expected hypothesis outcome.</div>
+    </div>
+    <div class="score-card animate-el" style="transition-delay:.1s">
+      <div class="score-metric">Test 02 · Profitability</div>
+      <div class="score-val" style="color:var(--blue);">3.42%</div>
+      <div style="font-size:12px;color:var(--muted);">Return on Assets</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin:8px 0;">ROE: 13.40%</div>
+      <span class="score-verdict sv-strong">✓ Profitability Intact</span>
+      <div class="score-note">ROA of 3.42% signals strong asset productivity. Combined with ROE of 13.40%, capital is generating meaningful returns for shareholders — not being diluted by growth.</div>
+    </div>
+    <div class="score-card animate-el" style="transition-delay:.2s">
+      <div class="score-metric">Test 03 · Quality</div>
+      <div class="score-val" style="color:var(--gold);">IDR 57.5T</div>
+      <div style="font-size:12px;color:var(--muted);">Net Profit</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin:8px 0;">Digital: +24% YoY</div>
+      <span class="score-verdict sv-pass">✓ Growth Paying Off</span>
+      <div class="score-note">Net profit at this level, during investment in digital infrastructure and loan growth, suggests BCA is scaling without compromising the economics of its core business.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ S9: VERDICT ══ -->
+<section id="s9">
+  <div class="thread-node"></div>
+  <div class="eyebrow animate-el">Section 09 · Verdict</div>
+  <h2 class="sec-title animate-el">The <em>hypothesis</em> does not hold.</h2>
+  <div class="divider animate-el"></div>
+  <p class="sec-body animate-el">The investigation is complete. The evidence speaks clearly — and it challenges the initial assumption.</p>
+
+  <div class="verdict-block animate-el">
+    <div class="verdict-hypothesis">
+      <div class="vh-tag">H₁ Rejected</div>
+      <div class="vh-text">"Rapid growth in a large financial institution typically signals trade-offs — efficiency deteriorates, costs rise faster than revenue, and profitability per unit of capital weakens."</div>
+    </div>
+    <div class="verdict-finding">
+      <div class="vf-tag">Finding</div>
+      <div class="vf-text">The evidence does <strong>not</strong> support the hypothesis. BCA's growth period — spanning aggressive loan expansion, digital infrastructure investment, and significant customer base scaling — was accompanied by <strong>improved cost efficiency</strong> (CIR: 52.96% → 49.09%), <strong>sustained profitability</strong> (ROA: 3.42%, ROE: 13.40%), and <strong>accelerating customer engagement</strong> (23B transactions, +24% YoY). All three operational quality tests returned positive results.</div>
+    </div>
+    <div class="verdict-conclusion">
+      BCA appears to be one of a rare class of institutions that has found a way to grow <em>without degrading</em> the quality of what it has built — using digital engagement as a flywheel and CASA as a structural funding moat.
+    </div>
+  </div>
+</section>
+
+<!-- ══ S10: STRATEGIC INSIGHT ══ -->
+<section id="s10">
+  <div class="thread-node"></div>
+  <div class="eyebrow animate-el">Section 10 · Strategic Insight</div>
+  <div class="insight-hero animate-el">
+    <div class="insight-quote">
+      "BCA's success is not defined by how fast it grows. It is defined by <em>how well it scales.</em>"
+    </div>
+    <div class="insight-body">
+      The distinction matters. Fast growth is available to any institution willing to loosen credit standards, raise deposit rates, or sacrifice margin. Scaling well — maintaining efficiency, deepening customer engagement, and strengthening the funding structure simultaneously — requires something fundamentally different: disciplined execution across every layer of the business, sustained over years, not quarters. The 83.4% CASA ratio is not luck. The 23 billion transactions are not marketing. Together, they are the output of a business model that has been carefully compounded — and the data suggests that compounding is still in progress.
+    </div>
+  </div>
+</section>
+
+<!-- ══ S11: METHODOLOGY ══ -->
+<section id="s11">
+  <div class="thread-node"></div>
+  <div class="eyebrow animate-el">Section 11 · Methodology & Sources</div>
+  <h2 class="sec-title animate-el">How this investigation <em>was conducted.</em></h2>
+  <div class="divider animate-el"></div>
+
+  <div class="method-grid">
+    <div class="method-card animate-el">
+      <div class="mc-label">Data Sources</div>
+      <ul class="mc-list">
+        <li>BCA Annual Reports (Publicly Available)</li>
+        <li>Quarterly Financial Disclosures</li>
+        <li>Investor Presentations & Briefings</li>
+        <li>Regulatory Financial Filings (OJK)</li>
+        <li>Public Financial Publications & Analysis</li>
+      </ul>
+    </div>
+    <div class="method-card animate-el" style="transition-delay:.1s">
+      <div class="mc-label">Analytical Approach</div>
+      <ul class="mc-list">
+        <li>Hypothesis-driven investigation framework</li>
+        <li>Multi-metric operational quality testing</li>
+        <li>Pattern recognition across growth dimensions</li>
+        <li>Competitive context benchmarking</li>
+        <li>Strategic moat identification</li>
+      </ul>
+    </div>
+    <div class="method-card full animate-el" style="transition-delay:.2s">
+      <div class="mc-label">Limitations & Disclaimer</div>
+      <div class="mc-body">
+        This investigation relies entirely on publicly available information and does not include access to internal operational data, proprietary management reporting, or non-public financial disclosures. All metrics are interpreted from public sources and may not reflect the full operational picture. This analysis is prepared independently for educational and portfolio demonstration purposes and does not constitute investment advice, a buy/sell recommendation, or a formal audit of BCA's financial statements. Figures are approximate, sourced from 2024–2025 public disclosures, and are subject to revision by the company.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ S12: ABOUT ══ -->
+<section id="s12">
+  <div class="thread-node"></div>
+  <div class="eyebrow animate-el">Section 12 · About The Analyst</div>
+  <div class="about-card animate-el">
+    <div class="about-avatar">MR</div>
+    <div>
+      <div class="about-name">Muhamad Reva Riza Akbar</div>
+      <div class="about-title">Business Investigation & Analytics</div>
+      <div class="about-desc">Independent analyst focused on uncovering hidden business patterns, operational risks, growth dynamics, and strategic insights through data-driven investigation. Specializes in translating complex financial and operational data into executive-level strategic narratives — making the invisible visible for decision-makers.</div>
+    </div>
+  </div>
+</section>
+
+</div><!-- end thread-container -->
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-prepared">Prepared Independently By</div>
+  <div class="footer-name">Muhamad Reva Riza Akbar</div>
+  <div class="footer-role">Business Investigation & Analytics</div>
+  <div class="footer-cta">Interested in a similar business investigation?<br><em>Let's uncover the story behind the numbers.</em></div>
+  <br><br>
+  <button class="footer-btn">Let's Work Together →</button>
+  <div class="footer-copyright">© 2026 · Muhamad Reva Riza Akbar · Independent Business Investigation · All analysis based on public data</div>
+</footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+// Intersection observer
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('vis');
+    // Animate bar fills
+    e.target.querySelectorAll('.bar-fill[data-w]').forEach(b => {
+      setTimeout(() => { b.style.width = b.dataset.w + '%'; }, 200);
+    });
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll(
+  '.eyebrow,.sec-title,.sec-body,.divider,.animate-el,' +
+  '.kpi-card,.chart-card,.fw-step,.fw-connector,.score-card,' +
+  '.method-card,.about-card,.verdict-block,.insight-hero,.aha-section,.moat-card,.hypothesis-card'
+).forEach(el => io.observe(el));
+
+// Stagger fw-steps
+document.querySelectorAll('.fw-step,.fw-connector').forEach((el,i) => {
+  el.style.transitionDelay = (i * 0.06) + 's';
+});
+
+// Stagger kpi-cards
+document.querySelectorAll('.kpi-card').forEach((el,i) => {
+  if (!el.style.transitionDelay) el.style.transitionDelay = (i * 0.08) + 's';
+});
+</script>
+</body>
+</html>
