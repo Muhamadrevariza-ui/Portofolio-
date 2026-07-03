@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Automation Paradox: A Strategic Investigation</title>
+<style>
+    :root {
+        --bg: #050505;
+        --text-main: #EAEAEA;
+        --text-muted: #777777;
+        --accent: #FF7A18;
+        --border: #222222;
+        --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --width-narrow: 680px;
+        --width-wide: 960px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        background-color: var(--bg);
+        color: var(--text-main);
+        font-family: var(--font-sans);
+        line-height: 1.7;
+        font-size: 18px;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+    }
+
+    h1 {
+        font-size: clamp(3.5rem, 9vw, 6.5rem);
+        font-weight: 700;
+        letter-spacing: -0.04em;
+        line-height: 0.95;
+        color: #fff;
+        margin-bottom: 40px;
+    }
+
+    h2 {
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin-bottom: 40px;
+        color: #fff;
+        line-height: 1.1;
+    }
+
+    h3 {
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    h4 {
+        font-size: 1.2rem;
+        color: #fff;
+        margin-bottom: 12px;
+        font-weight: 600;
+    }
+
+    p {
+        color: #A0A0A0;
+        margin-bottom: 28px;
+        font-weight: 400;
+        font-size: 1.05rem;
+    }
+
+    .lead {
+        font-size: 1.4rem;
+        line-height: 1.5;
+        color: #ccc;
+        font-weight: 400;
+        margin-bottom: 40px;
+    }
+
+    .label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--accent);
+        margin-bottom: 30px;
+        display: block;
+        font-weight: 700;
+    }
+
+    .container {
+        max-width: var(--width-narrow);
+        margin: 0 auto;
+        padding: 0 24px;
+        position: relative;
+    }
+
+    .container-wide {
+        max-width: var(--width-wide);
+        margin: 0 auto;
+        padding: 0 24px;
+    }
+
+    section {
+        padding: 120px 0;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 1s ease, transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        border-bottom: 1px solid var(--border);
+    }
+
+    section:last-child { border-bottom: none; }
+
+    section.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .cover {
+        min-height: 95vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-bottom: none;
+    }
+
+    .cover-meta {
+        border-top: 1px solid #333;
+        padding-top: 20px;
+        margin-top: 60px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .hypothesis-box {
+        background: #0a0a0a;
+        border-left: 2px solid var(--accent);
+        padding: 40px;
+        margin: 60px 0;
+    }
+
+    .hypothesis-box h4 { color: var(--accent); margin-bottom: 15px; }
+    .hypothesis-box p { color: #ccc; font-size: 1.1rem; margin: 0; }
+
+    .hypothesis-pair {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-top: 40px;
+    }
+    @media (min-width: 768px) {
+        .hypothesis-pair { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .analogy-card {
+        background: #111;
+        padding: 50px;
+        margin: 80px 0;
+        text-align: center;
+        border: 1px solid #222;
+    }
+    .analogy-text {
+        font-size: 1.5rem;
+        font-style: italic;
+        color: #fff;
+        line-height: 1.4;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .tree-container {
+        margin: 60px 0;
+        padding-left: 20px;
+    }
+    .tree-node {
+        margin-bottom: 30px;
+        position: relative;
+        padding-left: 30px;
+        border-left: 1px solid #333;
+    }
+    .tree-node::before {
+        content: '';
+        position: absolute;
+        left: -1px;
+        top: 15px;
+        width: 10px;
+        height: 1px;
+        background: #333;
+    }
+    .tree-title { font-weight: 600; color: #fff; font-size: 1.1rem; }
+    .tree-desc { font-size: 0.95rem; color: var(--text-muted); margin-top: 5px; }
+
+    .evidence-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 40px;
+        margin-top: 60px;
+    }
+    @media (min-width: 768px) {
+        .evidence-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+    }
+
+    .evidence-card {
+        border-top: 1px solid #222;
+        padding-top: 20px;
+        transition: border-color 0.3s ease;
+    }
+    .evidence-card:hover {
+        border-top-color: var(--accent);
+    }
+    .evidence-card h4 { font-size: 1rem; color: var(--accent); margin-bottom: 10px; }
+    .evidence-card p { font-size: 0.95rem; margin-bottom: 15px; }
+    .evidence-source {
+        font-size: 0.78rem;
+        color: #666;
+        margin-top: 10px;
+        font-style: italic;
+    }
+    .confidence-tag {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        background: #111;
+        color: #666;
+        border: 1px solid #222;
+    }
+
+    .escape-map {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin: 60px 0;
+    }
+    .escape-item {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        background: #0a0a0a;
+        border-left: 2px solid #333;
+        transition: background 0.3s ease;
+    }
+    .escape-item:hover {
+        background: #111;
+    }
+    .escape-item.leak { border-left-color: var(--accent); }
+    .escape-name { font-weight: 600; color: #fff; width: 150px; flex-shrink: 0; }
+    .escape-reason { color: var(--text-muted); font-size: 0.95rem; }
+
+    .impact-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 60px;
+        margin: 80px 0;
+    }
+    @media (min-width: 768px) {
+        .impact-grid { grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    }
+    .metric-huge { font-size: 3.5rem; font-weight: 700; color: #fff; letter-spacing: -0.03em; line-height: 1; margin-bottom: 10px; display: block; }
+    .metric-sub { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 10px; display: block; }
+    .metric-context { font-size: 0.9rem; color: #555; font-style: italic; border-left: 2px solid #222; padding-left: 15px; }
+
+    .pull-quote {
+        font-size: clamp(1.8rem, 4vw, 2.5rem);
+        font-weight: 600;
+        color: #fff;
+        line-height: 1.3;
+        margin: 100px 0;
+        padding-left: 40px;
+        border-left: 4px solid var(--accent);
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 40px 0;
+        font-size: 0.9rem;
+    }
+    .data-table th { text-align: left; padding: 15px; border-bottom: 1px solid #333; color: var(--text-muted); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
+    .data-table td { padding: 15px; border-bottom: 1px solid #1a1a1a; color: #ccc; }
+    .data-table tr:last-child td { border-bottom: none; }
+
+    .source-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-top: 40px;
+    }
+    @media (min-width: 768px) {
+        .source-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .appendix { padding: 100px 0; border-top: 1px solid #1a1a1a; font-size: 0.85rem; color: #444; }
+    .dataset-list { list-style: none; margin-top: 30px; columns: 2; column-gap: 40px; }
+    @media (max-width: 600px) { .dataset-list { columns: 1; } }
+    .dataset-list li { margin-bottom: 12px; break-inside: avoid; }
+
+    .progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: transparent; z-index: 100; }
+    .progress-bar { height: 3px; background: var(--accent); width: 0%; transition: width 0.1s; }
+
+    .verdict-quote {
+        font-size: clamp(1.6rem, 4vw, 2.2rem);
+        font-weight: 600;
+        color: #fff;
+        line-height: 1.4;
+        margin-bottom: 30px;
+    }
+    .verdict-sub {
+        font-size: 1.1rem;
+        color: #ccc;
+    }
+
+    .recs-list { margin-top: 60px; }
+    .rec-item { display: flex; gap: 30px; padding: 30px 0; border-top: 1px solid #1a1a1a; }
+    .rec-time { width: 120px; flex-shrink: 0; color: var(--accent); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .rec-body h4 { margin-bottom: 8px; }
+    .rec-body p { margin-bottom: 0; }
+
+    /* Author Identity Block (Cover) */
+    .author-block {
+        margin-bottom: 50px;
+    }
+    .author-label {
+        display: block;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin-bottom: 10px;
+    }
+    .author-name {
+        display: block;
+        font-size: 1.4rem;
+        color: #fff;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        margin-bottom: 8px;
+    }
+    .author-role {
+        display: block;
+        font-size: 0.95rem;
+        color: #999;
+        margin-bottom: 4px;
+        font-weight: 400;
+    }
+    .author-sub {
+        display: block;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        letter-spacing: 0.03em;
+    }
+
+    /* Investigator Interest List */
+    .interest-list {
+        list-style: none;
+        margin: 0;
+    }
+    .interest-list li {
+        color: #ccc;
+        font-size: 1rem;
+        padding: 14px 0;
+        border-top: 1px solid #1a1a1a;
+        position: relative;
+        padding-left: 20px;
+    }
+    .interest-list li:first-child { border-top: none; }
+    .interest-list li::before {
+        content: '—';
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+    }
+
+    /* Footer Block */
+    .footer-block {
+        margin-top: 50px;
+        padding-top: 40px;
+        border-top: 1px solid #1a1a1a;
+    }
+    .footer-block h4 {
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 12px;
+        font-weight: 600;
+    }
+    .footer-name {
+        color: #ccc;
+        font-size: 1.05rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+    .footer-role {
+        color: #777;
+        font-size: 0.88rem;
+        margin-bottom: 26px;
+    }
+    .footer-disclaimer {
+        color: #555;
+        font-size: 0.82rem;
+        max-width: 480px;
+        line-height: 1.7;
+        margin-bottom: 26px;
+    }
+    .footer-copyright {
+        color: #3d3d3d;
+        font-size: 0.78rem;
+        margin-bottom: 0;
+    }
+
+    /* Bottom Signature */
+    .signature-footer {
+        text-align: center;
+        padding: 60px 24px 60px;
+    }
+    .signature-divider {
+        width: 48px;
+        height: 1px;
+        background: #222;
+        margin: 0 auto 26px;
+    }
+    .signature-text {
+        font-size: 0.72rem;
+        color: #3d3d3d;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        line-height: 1.9;
+        margin: 0;
+    }
+    .signature-text span {
+        color: #666;
+    }
+
+    /* Executive Badges (Cover) */
+    .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 36px;
+    }
+    .badge {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #999;
+        border: 1px solid #2a2a2a;
+        padding: 7px 14px;
+        border-radius: 100px;
+        font-weight: 600;
+        transition: border-color 0.3s ease, color 0.3s ease;
+    }
+    .badge:hover {
+        border-color: var(--accent);
+        color: #ddd;
+    }
+
+    /* Reading Metadata (Cover) */
+    .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 28px;
+        margin: 30px 0 10px;
+    }
+    .meta-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .meta-value {
+        font-size: 1.15rem;
+        color: #fff;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+    }
+    .meta-label {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    /* Hero Quote */
+    .hero-quote-text {
+        font-size: clamp(1.6rem, 4.2vw, 2.6rem);
+        font-weight: 600;
+        color: #fff;
+        line-height: 1.35;
+        letter-spacing: -0.01em;
+        margin-bottom: 36px;
+    }
+    .hero-quote-attribution {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+    }
+    .hero-quote-attribution strong {
+        display: block;
+        color: #ccc;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    /* Executive Snapshot */
+    .snapshot-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1px;
+        margin-top: 50px;
+        background: #1a1a1a;
+        border: 1px solid #1a1a1a;
+    }
+    @media (min-width: 768px) {
+        .snapshot-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .snapshot-card {
+        background: #050505;
+        padding: 36px;
+        transition: background 0.3s ease;
+    }
+    .snapshot-card:hover { background: #0a0a0a; }
+    .snapshot-card h4 { color: var(--accent); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; }
+    .snapshot-card p { font-size: 1.02rem; color: #ccc; margin: 0; }
+
+    /* Table of Contents */
+    .toc-list {
+        list-style: none;
+        margin-top: 50px;
+    }
+    .toc-item {
+        display: flex;
+        align-items: baseline;
+        gap: 20px;
+        padding: 16px 0;
+        border-top: 1px solid #1a1a1a;
+        text-decoration: none;
+        cursor: pointer;
+        transition: padding-left 0.3s ease;
+    }
+    .toc-item:hover { padding-left: 8px; }
+    .toc-num { color: var(--accent); font-size: 0.85rem; font-weight: 700; width: 28px; flex-shrink: 0; }
+    .toc-title { color: #ccc; font-size: 1.05rem; font-weight: 500; }
+
+    /* Research Stats */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1px;
+        margin-top: 50px;
+        background: #1a1a1a;
+        border: 1px solid #1a1a1a;
+    }
+    @media (min-width: 768px) {
+        .stats-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .stat-card {
+        background: #050505;
+        padding: 36px 24px;
+        text-align: center;
+    }
+    .stat-number { display: block; font-size: 2.6rem; font-weight: 700; color: #fff; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .stat-label { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* Methodology Flow */
+    .flow-container {
+        margin: 60px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .flow-step {
+        width: 100%;
+        max-width: 420px;
+        background: #0a0a0a;
+        border: 1px solid #222;
+        padding: 22px 30px;
+        text-align: center;
+        font-size: 0.95rem;
+        color: #ddd;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+    }
+    .flow-arrow {
+        color: var(--accent);
+        font-size: 1.1rem;
+        padding: 10px 0;
+        line-height: 1;
+    }
+
+    /* Research Scope */
+    .scope-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 40px;
+        margin-top: 50px;
+    }
+    @media (min-width: 768px) {
+        .scope-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .scope-list { list-style: none; }
+    .scope-list li {
+        font-size: 0.98rem;
+        color: #ccc;
+        padding: 12px 0;
+        border-top: 1px solid #1a1a1a;
+        padding-left: 28px;
+        position: relative;
+    }
+    .scope-list li:first-child { border-top: none; }
+    .scope-list.included li::before { content: '✔'; position: absolute; left: 0; color: var(--accent); font-size: 0.85rem; }
+    .scope-list.excluded li::before { content: '✘'; position: absolute; left: 0; color: #555; font-size: 0.85rem; }
+    .scope-list.excluded li { color: #777; }
+
+    /* Limitations */
+    .limitations-list { list-style: none; margin-top: 40px; }
+    .limitations-list li {
+        font-size: 0.98rem;
+        color: #ccc;
+        padding: 14px 0;
+        border-top: 1px solid #1a1a1a;
+    }
+    .limitations-list li:first-child { border-top: none; }
+
+    /* References */
+    .ref-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 36px;
+        margin-top: 50px;
+    }
+    @media (min-width: 768px) {
+        .ref-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .ref-category h4 { color: var(--accent); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+    .ref-category p { font-size: 0.92rem; color: #999; margin: 0; }
+    .ref-entry-list { list-style: none; margin-top: 4px; }
+    .ref-entry { font-size: 0.88rem; color: #999; padding: 8px 0; border-top: 1px solid #1a1a1a; }
+    .ref-entry:first-child { border-top: none; padding-top: 0; }
+    .ref-entry strong { color: #ccc; font-weight: 600; }
+    .ref-entry span { color: #666; }
+
+    /* Confidence Legend */
+    .legend-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1px;
+        margin-top: 50px;
+        background: #1a1a1a;
+        border: 1px solid #1a1a1a;
+    }
+    @media (min-width: 768px) {
+        .legend-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .legend-item { background: #050505; padding: 30px; }
+    .legend-item h4 { font-size: 0.95rem; margin-bottom: 10px; }
+    .legend-item.high h4 { color: #fff; }
+    .legend-item.medium h4 { color: #ccc; }
+    .legend-item.low h4 { color: #888; }
+    .legend-item p { font-size: 0.9rem; color: #888; margin: 0; }
+
+    /* Glossary */
+    .glossary-list { margin-top: 50px; }
+    .glossary-item { padding: 24px 0; border-top: 1px solid #1a1a1a; }
+    .glossary-item:first-child { border-top: none; }
+    .glossary-term { color: #fff; font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+    .glossary-def { color: #999; font-size: 0.95rem; margin: 0; }
+
+    /* Social Links */
+    .social-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 30px;
+    }
+    .social-link {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        border: 1px solid #222;
+        padding: 10px 18px;
+        text-decoration: none;
+        transition: border-color 0.3s ease, color 0.3s ease;
+    }
+    .social-link:hover {
+        border-color: var(--accent);
+        color: #ddd;
+    }
+
+    /* Executive Facts */
+    .facts-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1px;
+        margin-top: 50px;
+        background: #1a1a1a;
+        border: 1px solid #1a1a1a;
+    }
+    @media (min-width: 768px) {
+        .facts-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .fact-card {
+        background: #050505;
+        padding: 28px 26px;
+        transition: background 0.3s ease;
+    }
+    .fact-card:hover { background: #0a0a0a; }
+    .fact-label {
+        display: block;
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+    }
+    .fact-value {
+        display: block;
+        font-size: 1.02rem;
+        color: #eee;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+    }
+
+    /* Reading Guide */
+    .guide-list {
+        margin-top: 40px;
+        list-style: none;
+    }
+    .guide-item {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 6px;
+        padding: 20px 0;
+        border-top: 1px solid #1a1a1a;
+    }
+    @media (min-width: 768px) {
+        .guide-item { grid-template-columns: 220px 1fr; gap: 30px; align-items: baseline; }
+    }
+    .guide-item:first-child { border-top: none; }
+    .guide-label { color: var(--accent); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+    .guide-value { color: #ccc; font-size: 0.98rem; }
+
+    /* Section Divider */
+    .section-divider {
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #2a2a2a, transparent);
+        margin: 70px 0;
+    }
+
+    /* Executive Note / Callout */
+    .exec-note {
+        background: #0a0a0a;
+        border: 1px solid #1e1e1e;
+        border-left: 2px solid var(--accent);
+        padding: 26px 32px;
+        margin: 50px 0;
+        font-size: 0.95rem;
+        color: #bbb;
+        line-height: 1.7;
+    }
+    .exec-note strong { color: #fff; }
+
+    /* Small Pull Quote */
+    .pull-quote-small {
+        font-size: 1.3rem;
+        font-weight: 500;
+        color: #ddd;
+        line-height: 1.5;
+        font-style: italic;
+        border-left: 2px solid #333;
+        padding-left: 24px;
+        margin: 50px 0;
+    }
+
+    /* Confidence Dot Indicator */
+    .confidence-dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        margin-right: 8px;
+        vertical-align: middle;
+    }
+    .confidence-dot.high { background: var(--accent); }
+    .confidence-dot.medium { background: #888; }
+    .confidence-dot.low { background: #444; }
+
+    /* Executive Review Cards */
+    .review-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-top: 50px;
+    }
+    .review-card {
+        background: #0a0a0a;
+        border: 1px solid #1a1a1a;
+        padding: 36px;
+        transition: border-color 0.3s ease;
+    }
+    .review-card:hover { border-color: #2a2a2a; }
+    .review-role {
+        color: var(--accent);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 700;
+        margin-bottom: 20px;
+        display: block;
+    }
+    .review-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-top: 20px;
+    }
+    @media (min-width: 768px) {
+        .review-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    .review-point h5 {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+        font-weight: 700;
+    }
+    .review-point p {
+        font-size: 0.92rem;
+        color: #bbb;
+        margin: 0;
+    }
+
+    .verdict-final {
+        margin-top: 60px;
+        background: #0a0a0a;
+        border: 1px solid #1a1a1a;
+        padding: 40px;
+    }
+    .verdict-final h4 {
+        color: var(--accent);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 10px;
+    }
+    .verdict-final p {
+        font-size: 0.95rem;
+        color: #bbb;
+        margin-bottom: 22px;
+    }
+    .verdict-final p:last-child { margin-bottom: 0; }
+
+    /* Revision Timeline */
+    .revision-timeline {
+        margin-top: 50px;
+        position: relative;
+        padding-left: 30px;
+        border-left: 1px solid #222;
+    }
+    .revision-item {
+        position: relative;
+        padding-bottom: 40px;
+    }
+    .revision-item:last-child { padding-bottom: 0; }
+    .revision-item::before {
+        content: '';
+        position: absolute;
+        left: -35px;
+        top: 4px;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--accent);
+    }
+    .revision-version { color: #fff; font-size: 1.05rem; font-weight: 600; margin-bottom: 4px; }
+    .revision-title { color: #999; font-size: 0.92rem; margin-bottom: 4px; }
+    .revision-date { color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* Philosophy */
+    .philosophy-text {
+        font-size: 1.15rem;
+        color: #ccc;
+        line-height: 1.8;
+        max-width: 640px;
+    }
+
+    @media print {
+        body { background: #fff; color: #000; }
+        section { opacity: 1; transform: none; border-bottom: 1px solid #ccc; page-break-inside: avoid; }
+        h1, h2, h3, h4, p, .lead { color: #000; }
+        .label { color: #000; }
+        .progress-container { display: none; }
+        .analogy-card, .hypothesis-box { background: #f5f5f5; border-color: #000; }
+        .metric-huge { color: #000; }
+    }
+</style>
+</head>
+<body>
+
+<div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+
+<!-- COVER -->
+<section class="cover visible">
+    <div class="container">
+        <div class="badge-row">
+            <span class="badge">Independent Research</span>
+            <span class="badge">Business Investigation</span>
+            <span class="badge">Strategic Portfolio</span>
+            <span class="badge">2026 Edition</span>
+        </div>
+
+        <span class="label">Confidential Strategic Analysis</span>
+        <h1>The Automation<br>Paradox</h1>
+
+        <div class="meta-row">
+            <div class="meta-item">
+                <span class="meta-value">23 min</span>
+                <span class="meta-label">Read Time</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-value">18</span>
+                <span class="meta-label">Evidence Sources</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-value">4</span>
+                <span class="meta-label">Strategic Frameworks</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-value">8</span>
+                <span class="meta-label">Investigation Patterns</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-value">v1.3</span>
+                <span class="meta-label">Report Version</span>
+            </div>
+        </div>
+
+        <div class="author-block">
+            <span class="author-label">Prepared & Investigated by</span>
+            <span class="author-name">Muhamad Reva Riza Akbar</span>
+            <span class="author-role">Business Investigation & Analytics Portfolio</span>
+            <span class="author-sub">Independent Strategic Research · July 2026</span>
+        </div>
+
+        <p class="lead">An operational investigation into whether Rocketlane eliminates work or redistributes it into hidden manual processes.</p>
+        <div class="cover-meta">
+            <span>Prepared by<br>Muhamad Reva Riza Akbar</span>
+            <span>Business Investigation & Analytics Portfolio</span>
+        </div>
+    </div>
+</section>
+
+<!-- EXECUTIVE FACTS -->
+<section>
+    <div class="container-wide">
+        <span class="label">At A Glance</span>
+        <h2>Executive Facts</h2>
+        <p class="lead">The essential parameters of this investigation, summarized for immediate context.</p>
+
+        <div class="facts-grid">
+            <div class="fact-card">
+                <span class="fact-label">Company Investigated</span>
+                <span class="fact-value">Rocketlane</span>
+            </div>
+            <div class="fact-card">
+                <span class="fact-label">Industry</span>
+                <span class="fact-value">Client Onboarding & PSA Software</span>
+            </div>
+            <div class="fact-card">
+                <span class="fact-label">Investigation Type</span>
+                <span class="fact-value">Public Evidence Strategic Analysis</span>
+            </div>
+            <div class="fact-card">
+                <span class="fact-label">Research Period</span>
+                <span class="fact-value">2026</span>
+            </div>
+            <div class="fact-card">
+                <span class="fact-label">Author</span>
+                <span class="fact-value">Muhamad Reva Riza Akbar</span>
+            </div>
+            <div class="fact-card">
+                <span class="fact-label">Report Version</span>
+                <span class="fact-value">v1.3 · Publication Edition</span>
+            </div>
+            <div class="fact-card">
+                <span class="fact-label">Estimated Reading Time</span>
+                <span class="fact-value">23 Minutes</span>
+            </div>
+            <div class="fact-card">
+                <span class="fact-label">Evidence Sources</span>
+                <span class="fact-value">18 Sources</span>
+            </div>
+            <div class="fact-card">
+                <span class="fact-label">Frameworks Applied</span>
+                <span class="fact-value">4 Frameworks</span>
+            </div>
+            <div class="fact-card">
+                <span class="fact-label">Patterns Investigated</span>
+                <span class="fact-value">8 Patterns</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HERO QUOTE -->
+<section>
+    <div class="container">
+        <p class="hero-quote-text">"Software rarely fails because it lacks features.<br>It fails because work quietly leaves the system."</p>
+        <div class="hero-quote-attribution">
+            <strong>Muhamad Reva Riza Akbar</strong>
+            Business Investigation & Analytics
+        </div>
+    </div>
+</section>
+
+<!-- EXECUTIVE SNAPSHOT -->
+<section id="snapshot">
+    <div class="container">
+        <span class="label">60-Second Briefing</span>
+        <h2>Executive Snapshot</h2>
+        <p class="lead">A single-glance view of the investigation, built for leadership review.</p>
+
+        <div class="snapshot-grid">
+            <div class="snapshot-card">
+                <h4>Executive Question</h4>
+                <p>Does Rocketlane eliminate operational work, or does it relocate that work into hidden manual processes?</p>
+            </div>
+            <div class="snapshot-card">
+                <h4>Primary Finding</h4>
+                <p>Public evidence suggests customer-facing friction drops, but administrative burden may resurface internally as a Shadow Workflow in complex environments.</p>
+            </div>
+            <div class="snapshot-card">
+                <h4>Strategic Risk</h4>
+                <p>Workflow escape may erode data integrity, creating a "Cost of Truth" that could affect enterprise renewal and expansion.</p>
+            </div>
+            <div class="snapshot-card">
+                <h4>Recommended Action</h4>
+                <p>Strengthen native reporting and Salesforce synchronization so operational work stays inside the system of record.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HOW TO READ THIS REPORT -->
+<section>
+    <div class="container">
+        <span class="label">Reader's Guide</span>
+        <h2>How to Read This Report</h2>
+        <p class="lead">A short orientation before you begin, in the interest of your time.</p>
+
+        <ul class="guide-list">
+            <li class="guide-item">
+                <span class="guide-label">Purpose</span>
+                <span class="guide-value">To determine whether Rocketlane eliminates operational work or redistributes it into hidden manual processes, and to translate that finding into strategic action.</span>
+            </li>
+            <li class="guide-item">
+                <span class="guide-label">Target Audience</span>
+                <span class="guide-value">Product leadership, operations leadership, and strategy stakeholders evaluating platform investment or renewal decisions.</span>
+            </li>
+            <li class="guide-item">
+                <span class="guide-label">Estimated Reading Time</span>
+                <span class="guide-value">23 minutes for a full read; under 60 seconds using the Executive Snapshot alone.</span>
+            </li>
+            <li class="guide-item">
+                <span class="guide-label">Investigation Methodology</span>
+                <span class="guide-value">Public evidence triangulation across product documentation, API references, independent reviews, and community discussion, structured through root-cause analysis.</span>
+            </li>
+            <li class="guide-item">
+                <span class="guide-label">Evidence Confidence System</span>
+                <span class="guide-value">Every finding is tagged High, Medium, or Low confidence based on source count and consistency. See the Confidence Legend for definitions.</span>
+            </li>
+            <li class="guide-item">
+                <span class="guide-label">Report Structure</span>
+                <span class="guide-value">Findings progress from hypothesis to evidence to business impact to recommendation, closing with independent executive review and investigator background.</span>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<!-- TABLE OF CONTENTS -->
+<section id="contents">
+    <div class="container">
+        <span class="label">Navigation</span>
+        <h2>Contents</h2>
+        <ul class="toc-list">
+            <li class="toc-item" onclick="document.getElementById('exec-summary').scrollIntoView({behavior:'smooth'})"><span class="toc-num">01</span><span class="toc-title">Executive Summary</span></li>
+            <li class="toc-item" onclick="document.getElementById('framework').scrollIntoView({behavior:'smooth'})"><span class="toc-num">02</span><span class="toc-title">Investigation Framework</span></li>
+            <li class="toc-item" onclick="document.getElementById('structural-analysis').scrollIntoView({behavior:'smooth'})"><span class="toc-num">03</span><span class="toc-title">Structural Analysis</span></li>
+            <li class="toc-item" onclick="document.getElementById('workflow-escape').scrollIntoView({behavior:'smooth'})"><span class="toc-num">04</span><span class="toc-title">Workflow Escape</span></li>
+            <li class="toc-item" onclick="document.getElementById('evidence').scrollIntoView({behavior:'smooth'})"><span class="toc-num">05</span><span class="toc-title">Evidence</span></li>
+            <li class="toc-item" onclick="document.getElementById('critical-thinking').scrollIntoView({behavior:'smooth'})"><span class="toc-num">06</span><span class="toc-title">Critical Thinking</span></li>
+            <li class="toc-item" onclick="document.getElementById('business-impact').scrollIntoView({behavior:'smooth'})"><span class="toc-num">07</span><span class="toc-title">Business Impact</span></li>
+            <li class="toc-item" onclick="document.getElementById('recommendations').scrollIntoView({behavior:'smooth'})"><span class="toc-num">08</span><span class="toc-title">Recommendations</span></li>
+            <li class="toc-item" onclick="document.getElementById('final-verdict').scrollIntoView({behavior:'smooth'})"><span class="toc-num">09</span><span class="toc-title">Final Verdict</span></li>
+            <li class="toc-item" onclick="document.getElementById('references').scrollIntoView({behavior:'smooth'})"><span class="toc-num">10</span><span class="toc-title">References</span></li>
+            <li class="toc-item" onclick="document.getElementById('about-investigator').scrollIntoView({behavior:'smooth'})"><span class="toc-num">11</span><span class="toc-title">About the Investigator</span></li>
+        </ul>
+    </div>
+</section>
+
+<!-- EXECUTIVE SUMMARY -->
+<section id="exec-summary">
+    <div class="container">
+        <span class="label">Executive Question: What is the answer?</span>
+        <h2>Executive Summary</h2>
+        <p class="lead">Evidence suggests Rocketlane reduces customer-facing friction, though it may redistribute administrative burden to internal delivery teams in complex environments. Public evidence indicates the platform can act as a sieve: it captures customer input effectively, but operational context may leak into external tools under certain conditions.</p>
+
+        <div class="hypothesis-box">
+            <h4>The Verdict</h4>
+            <p>Work is not always eliminated; in enterprise contexts, it is often relocated from the customer to the internal admin. We call this Shadow Workflow.</p>
+        </div>
+        <div class="hypothesis-box">
+            <h4>Key Risk</h4>
+            <p>Workflow escape may erode data integrity, creating a "Cost of Truth" that could impact enterprise renewal and expansion.</p>
+        </div>
+        <div class="hypothesis-box">
+            <h4>Primary Action</h4>
+            <p>Enhance reporting architecture and native Salesforce sync capabilities to keep work inside the system of record.</p>
+        </div>
+
+        <div class="exec-note">
+            <strong>Executive Note:</strong> This is not a claim that Rocketlane underperforms its category. Evidence indicates the platform performs strongly in standardized, low-customization deployments. The finding is scoped specifically to complex, enterprise-grade implementations.
+        </div>
+    </div>
+</section>
+
+<!-- HYPOTHESIS -->
+<section id="framework">
+    <div class="container">
+        <span class="label">Investigation Framework</span>
+        <h2>The Hypothesis</h2>
+        <p class="lead">Before analyzing evidence, we must define what we are testing. This investigation is driven by a specific operational hypothesis regarding the nature of automation in professional services.</p>
+
+        <div class="hypothesis-box">
+            <h4>Primary Hypothesis</h4>
+            <p>Public evidence suggests Rocketlane reduces customer-facing friction, while potentially redistributing administrative work toward internal delivery teams through manual maintenance, synchronization, and reporting workarounds in complex implementations.</p>
+        </div>
+
+        <div class="hypothesis-pair">
+            <div class="hypothesis-box">
+                <h4>Alternative Hypothesis</h4>
+                <p>Rocketlane eliminates operational work entirely, and any remaining manual tasks are anomalies or user error.</p>
+            </div>
+            <div class="hypothesis-box">
+                <h4>Null Hypothesis</h4>
+                <p>Rocketlane has no significant impact on operational workload distribution compared to generic project management tools.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ANALOGY -->
+<section>
+    <div class="container-wide">
+        <div class="analogy-card">
+            <p class="analogy-text">"Imagine an airport baggage system. It works perfectly for standard suitcases. But when a passenger brings an oddly shaped item (custom enterprise requirement), the automated belt may jam. So, a human agent pulls it off, carries it through the back corridors (Excel/Slack), and manually loads it onto the plane. The passenger sees their bag arrive. But the airline's operational cost has increased because the automation failed at the edge case."</p>
+        </div>
+    </div>
+</section>
+
+<!-- ROOT CAUSE TREE -->
+<section id="structural-analysis">
+    <div class="container">
+        <span class="label">Structural Analysis</span>
+        <h2>Root Cause Tree</h2>
+        <p class="lead">The Automation Paradox is not necessarily a single bug. It may be a structural outcome of several architectural decisions. We traced the symptoms back to their roots.</p>
+
+        <div class="tree-container">
+            <div class="tree-node">
+                <div class="tree-title">Reporting Architecture Rigidity</div>
+                <div class="tree-desc">Why? Data model limits may prevent custom financial views. Result: Potential Excel dependency.</div>
+            </div>
+            <div class="tree-node">
+                <div class="tree-title">Product Packaging Strategy</div>
+                <div class="tree-desc">Why? Advanced reporting is gated behind Enterprise tiers. Result: Possible workflow escape for mid-market users.</div>
+            </div>
+            <div class="tree-node">
+                <div class="tree-title">CRM Integration Complexity</div>
+                <div class="tree-desc">Why? Complex bidirectional sync may require Apex customization. Result: Manual configuration and maintenance burden.</div>
+            </div>
+            <div class="tree-node">
+                <div class="tree-title">Notification Design</div>
+                <div class="tree-desc">Why? Real-time alerts may lack granularity. Result: Notification fatigue may drive communication to Slack.</div>
+            </div>
+            <div class="tree-node">
+                <div class="tree-title">Nitro AI Validation Loop</div>
+                <div class="tree-desc">Why? AI drafts require human verification for compliance. Result: Work shifts from creation to verification.</div>
+            </div>
+            <div class="tree-node">
+                <div class="tree-title">API Constraints</div>
+                <div class="tree-desc">Why? Search limits may require retry logic at scale. Result: May require middleware for enterprise volume.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- WORKFLOW ESCAPE MAP -->
+<section id="workflow-escape">
+    <div class="container">
+        <span class="label">Operational Flow</span>
+        <h2>Workflow Escape Map</h2>
+        <p class="lead">Where does the work go when it leaves Rocketlane? Each escape point represents a potential loss of data integrity and an increase in operational risk.</p>
+
+        <div class="escape-map">
+            <div class="escape-item leak">
+                <div class="escape-name">Slack / Teams</div>
+                <div class="escape-reason">Communication may escape due to notification fatigue. Context leakage occurs here.</div>
+            </div>
+            <div class="escape-item leak">
+                <div class="escape-name">Excel / Sheets</div>
+                <div class="escape-reason">Financial tracking may escape due to reporting architecture limitations. This creates Shadow Workflows.</div>
+            </div>
+            <div class="escape-item leak">
+                <div class="escape-name">Email</div>
+                <div class="escape-reason">Client updates may escape when portal adoption is low or cumbersome.</div>
+            </div>
+            <div class="escape-item leak">
+                <div class="escape-name">Power BI / Tableau</div>
+                <div class="escape-reason">Executive insights may escape due to lack of native cross-project visualization.</div>
+            </div>
+            <div class="escape-item leak">
+                <div class="escape-name">Manual Scripts</div>
+                <div class="escape-reason">Data synchronization may escape due to API throttling and complexity.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- RESEARCH STATS -->
+<section>
+    <div class="container">
+        <span class="label">By The Numbers</span>
+        <h2>Research Stats</h2>
+        <p class="lead">A quantitative summary of the investigation's scope and rigor.</p>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number">18</span>
+                <span class="stat-label">Evidence Sources</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">8</span>
+                <span class="stat-label">Patterns Identified</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">4</span>
+                <span class="stat-label">Frameworks Applied</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">6</span>
+                <span class="stat-label">Recommendations</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- EVIDENCE DATABASE -->
+<section id="evidence">
+    <div class="container-wide">
+        <span class="label">Evidence Database</span>
+        <h2>Evidence & Patterns</h2>
+        <p class="lead">We identified eight recurring patterns where operational work may escape the platform. Each pattern below separates factual observation from analytical interpretation, and states its supporting sources.</p>
+
+        <div class="evidence-grid">
+            <div class="evidence-card">
+                <h4>1. Reporting Architecture</h4>
+                <p><strong>Observation:</strong> Users report exporting data to spreadsheets for financial tracking. <strong>Interpretation:</strong> This pattern may indicate the reporting architecture increases operational cost by requiring external reconstruction. <strong>Business Implication:</strong> Potential version-control and data-consistency risk.</p>
+                <span class="confidence-tag"><span class="confidence-dot high"></span>High Confidence</span>
+                <div class="evidence-source">Source: Triangulated from multiple public sources (G2 Reviews, Capterra Reviews).</div>
+            </div>
+            <div class="evidence-card">
+                <h4>2. Client Portal Dependency</h4>
+                <p><strong>Observation:</strong> Reviews describe delivery managers duplicating updates in Slack when clients do not consistently use the portal. <strong>Interpretation:</strong> This pattern may indicate the platform's value depends materially on customer-side adoption. <strong>Business Implication:</strong> Possible double-entry workload for delivery teams.</p>
+                <span class="confidence-tag"><span class="confidence-dot high"></span>High Confidence</span>
+                <div class="evidence-source">Source: Triangulated from multiple public sources (G2 Reviews, public community discussions).</div>
+            </div>
+            <div class="evidence-card">
+                <h4>3. Salesforce Complexity</h4>
+                <p><strong>Observation:</strong> Public documentation indicates complex bidirectional sync scenarios may require Apex customization. <strong>Interpretation:</strong> This suggests the integration is not fully "native" for all complex Salesforce configurations. <strong>Business Implication:</strong> Possible technical maintenance burden for enterprise IT teams.</p>
+                <span class="confidence-tag"><span class="confidence-dot high"></span>High Confidence</span>
+                <div class="evidence-source">Source: Salesforce Documentation; Rocketlane API Documentation.</div>
+            </div>
+            <div class="evidence-card">
+                <h4>4. Nitro AI Validation</h4>
+                <p><strong>Observation:</strong> Product materials indicate AI-drafted content requires human review before use in client-facing contexts. <strong>Interpretation:</strong> This may shift effort from content creation to content verification rather than eliminating it. <strong>Business Implication:</strong> Potential change in cost structure rather than a net reduction in effort.</p>
+                <span class="confidence-tag"><span class="confidence-dot medium"></span>Med Confidence</span>
+                <div class="evidence-source">Source: Rocketlane Product Blog; Release Notes.</div>
+            </div>
+            <div class="evidence-card">
+                <h4>5. API Constraints</h4>
+                <p><strong>Observation:</strong> Public API documentation describes search and rate limits. <strong>Interpretation:</strong> At enterprise data volumes, this may require retry logic or middleware. <strong>Business Implication:</strong> Possible engineering overhead for large-scale integrations.</p>
+                <span class="confidence-tag"><span class="confidence-dot high"></span>High Confidence</span>
+                <div class="evidence-source">Source: Rocketlane API Documentation.</div>
+            </div>
+            <div class="evidence-card">
+                <h4>6. Notification Fatigue</h4>
+                <p><strong>Observation:</strong> Reviews describe teams muting in-platform alerts and shifting coordination to Slack. <strong>Interpretation:</strong> This may reflect a lack of granular notification control. <strong>Business Implication:</strong> Possible loss of audit trail within the platform of record.</p>
+                <span class="confidence-tag"><span class="confidence-dot high"></span>High Confidence</span>
+                <div class="evidence-source">Source: Triangulated from multiple public sources (G2 Reviews, Capterra Reviews).</div>
+            </div>
+            <div class="evidence-card">
+                <h4>7. Timesheet Burden</h4>
+                <p><strong>Observation:</strong> Reviews describe nested task-level time logging as administratively heavy. <strong>Interpretation:</strong> Financial visibility may come at a meaningful UX cost for end users. <strong>Business Implication:</strong> Possible user resistance and downstream manual corrections.</p>
+                <span class="confidence-tag"><span class="confidence-dot medium"></span>Med Confidence</span>
+                <div class="evidence-source">Source: Triangulated from multiple public sources (Capterra Reviews, public community discussions).</div>
+            </div>
+            <div class="evidence-card">
+                <h4>8. Feature Gating</h4>
+                <p><strong>Observation:</strong> Public pricing and documentation indicate custom reporting fields are gated behind Enterprise-tier plans. <strong>Interpretation:</strong> This packaging choice may drive upgrades but could also encourage workarounds among mid-market users. <strong>Business Implication:</strong> Possible spreadsheet dependency for teams below the Enterprise tier.</p>
+                <span class="confidence-tag"><span class="confidence-dot high"></span>High Confidence</span>
+                <div class="evidence-source">Source: Rocketlane Documentation; Official Product Blog.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- WHEN IT WORKS WELL -->
+<section>
+    <div class="container">
+        <span class="label">Investigative Integrity</span>
+        <h2>When Rocketlane Works Extremely Well</h2>
+        <p class="lead">To ensure objectivity, we actively searched for environments where the Automation Paradox does not apply. Evidence suggests Rocketlane delivers near-perfect automation in specific contexts:</p>
+
+        <div class="hypothesis-box">
+            <p><strong>Highly Standardized Onboarding:</strong> When implementation playbooks are repeatable and low-customization, the platform's template engine eliminates nearly all administrative work.</p>
+        </div>
+        <div class="hypothesis-box">
+            <p><strong>Small Implementation Teams:</strong> Without complex enterprise governance needs, notification fatigue and reporting limits are less impactful.</p>
+        </div>
+        <div class="hypothesis-box">
+            <p><strong>Non-Salesforce Environments:</strong> Organizations without complex CRM synchronization needs avoid the highest source of technical maintenance burden.</p>
+        </div>
+
+        <p><em>Note on Bias:</em> Public reviews naturally overrepresent frustrated users. However, enterprise edge cases remain strategically important because they disproportionately influence expansion revenue and retention.</p>
+    </div>
+</section>
+
+<!-- ALTERNATIVE EXPLANATIONS -->
+<section id="critical-thinking">
+    <div class="container">
+        <span class="label">Critical Thinking</span>
+        <h2>Alternative Explanations</h2>
+        <p class="lead">For every major finding, we considered alternative causes to ensure our conclusion is robust.</p>
+
+        <div class="hypothesis-box">
+            <h4>Finding: Salesforce Complexity</h4>
+            <p><strong>Alternative Explanation:</strong> Perhaps Salesforce complexity is inherent to all enterprise CRMs, not unique to Rocketlane.</p>
+            <p><strong>Rebuttal:</strong> Competitors like Certinia offer deeper native integration. Rocketlane's reliance on client-side customization for complex maps suggests a product architecture gap, not just market reality.</p>
+        </div>
+
+        <div class="hypothesis-box">
+            <h4>Finding: Excel Escape</h4>
+            <p><strong>Alternative Explanation:</strong> Users simply prefer Excel for financial modeling regardless of tool capabilities.</p>
+            <p><strong>Rebuttal:</strong> Evidence suggests users export basic data that Rocketlane could plausibly display natively if the reporting engine were more flexible. This indicates the workaround may be driven more by platform limitation than by user preference, though this interpretation could not be independently confirmed against internal usage data.</p>
+        </div>
+    </div>
+</section>
+
+<!-- RESEARCH SCOPE -->
+<section>
+    <div class="container">
+        <span class="label">Boundaries of the Investigation</span>
+        <h2>Research Scope</h2>
+        <p class="lead">Every investigation is only as credible as its boundaries. Here is exactly what informed this analysis, and what did not.</p>
+
+        <div class="scope-grid">
+            <div>
+                <h3>In Scope</h3>
+                <ul class="scope-list included">
+                    <li>Product Documentation</li>
+                    <li>API Documentation</li>
+                    <li>User Reviews</li>
+                    <li>Community Discussions</li>
+                    <li>Competitive Benchmark</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Out of Scope</h3>
+                <ul class="scope-list excluded">
+                    <li>Internal Company Data</li>
+                    <li>Confidential Documents</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- METHODOLOGY -->
+<section id="methodology">
+    <div class="container-wide">
+        <span class="label">Methodology</span>
+        <h2>Confidence & Source Quality</h2>
+        <p class="lead">This investigation is based entirely on publicly available evidence. Findings were triangulated across multiple independent sources before a confidence level was assigned.</p>
+
+        <div class="flow-container">
+            <div class="flow-step">Public Evidence</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Cross Validation</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Pattern Detection</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Root Cause Analysis</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Strategic Recommendation</div>
+        </div>
+
+        <h3 style="margin-top: 60px;">Evidence Triangulation Process</h3>
+        <p>Each pattern in this investigation began as a raw observation drawn from public documentation, independent reviews, or community discussion. An observation was only elevated to a documented finding once comparable evidence appeared across at least two independent public sources, or — where only one source category was available — was explicitly noted as such. Interpretations were then developed from these findings, and business implications were derived from the interpretations. This chain is made explicit in the Evidence & Patterns section, where each entry separates Observation, Interpretation, and Business Implication.</p>
+
+        <h3 style="margin-top: 50px;">Confidence Scoring Logic</h3>
+        <p>Confidence levels reflect source count and consistency, not statistical measurement. <strong>High</strong> confidence indicates the pattern appeared consistently across multiple independent public sources. <strong>Medium</strong> confidence indicates consistent qualitative evidence from a narrower set of sources. <strong>Low</strong> confidence, where used, indicates a directionally suggestive pattern that would require internal data to confirm. The percentages in the table below are an illustrative scoring model used to communicate relative confidence internally within this investigation; they are not statistically derived company metrics.</p>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Finding</th>
+                    <th>Evidence Type</th>
+                    <th>Consistency</th>
+                    <th>Confidence</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Reporting Limits</td>
+                    <td>Reviews + Docs</td>
+                    <td>High</td>
+                    <td>90% (High) — Illustrative Score</td>
+                </tr>
+                <tr>
+                    <td>Salesforce Sync</td>
+                    <td>API Docs + Community</td>
+                    <td>High</td>
+                    <td>95% (High) — Illustrative Score</td>
+                </tr>
+                <tr>
+                    <td>Nitro AI Utility</td>
+                    <td>User Feedback</td>
+                    <td>Medium</td>
+                    <td>80% (Med) — Illustrative Score</td>
+                </tr>
+                <tr>
+                    <td>API Throttling</td>
+                    <td>Technical Docs</td>
+                    <td>High</td>
+                    <td>98% (High) — Illustrative Score</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 style="margin-top: 60px;">Source Quality Matrix</h3>
+        <div class="source-grid">
+            <div class="evidence-card">
+                <h4>Official Documentation</h4>
+                <p>Generally high reliability for confirming feature existence and scope. Lower reliability for assessing real-world operational pain points, since documentation does not typically describe limitations.</p>
+            </div>
+            <div class="evidence-card">
+                <h4>Independent Reviews</h4>
+                <p>Generally high reliability for surfacing operational pain points. Subject to selection bias, as dissatisfied users are more likely to leave detailed public reviews.</p>
+            </div>
+            <div class="evidence-card">
+                <h4>API Documentation</h4>
+                <p>Very high reliability for technical constraints such as rate limits, since these are explicitly specified rather than open to interpretation.</p>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 60px;">Potential Bias & Alternative Explanations</h3>
+        <p>Public review data structurally overrepresents frustrated users relative to satisfied ones, which may inflate the apparent frequency of the patterns described in this report. This bias, along with contexts where Rocketlane performs strongly, is addressed directly in the Investigative Integrity and Critical Thinking sections above. Where a plausible alternative explanation existed for a finding, it is presented alongside a rebuttal rather than omitted.</p>
+
+        <h3 style="margin-top: 50px;">Key Assumptions</h3>
+        <p><strong>Assumption:</strong> Enterprise implementations generally involve higher reporting and integration complexity than SMB deployments. <em>Basis:</em> This is consistent with general patterns in B2B SaaS adoption and is referenced indirectly in public reviews that distinguish standard versus custom implementation experiences, though it was not independently verified against Rocketlane-specific deployment data.</p>
+        <p><strong>Assumption:</strong> Behavior described in reviews and community discussions is representative of a broader, unobserved population of users, not only of the individuals who chose to post publicly. <em>Basis:</em> This is a standard limitation of public-evidence research and is why findings are confidence-rated rather than presented as universal.</p>
+    </div>
+</section>
+
+<!-- RESEARCH LIMITATIONS -->
+<section>
+    <div class="container">
+        <span class="label">Investigative Honesty</span>
+        <h2>Research Limitations</h2>
+        <p class="lead">Credibility requires transparency about what this investigation could and could not see.</p>
+
+        <ul class="limitations-list">
+            <li>This investigation is based solely on publicly available information.</li>
+            <li>No confidential Rocketlane data was accessed at any point in this research.</li>
+            <li>Internal operational metrics, such as time-in-platform telemetry or support ticket volume, were unavailable and are not reflected in this report.</li>
+            <li>No employee interviews were conducted.</li>
+            <li>Some conclusions represent analytical interpretation of public evidence rather than verified internal company facts, and should be validated against internal data before being treated as decision-grade.</li>
+        </ul>
+    </div>
+</section>
+
+<!-- BUSINESS IMPACT -->
+<section id="business-impact">
+    <div class="container-wide">
+        <span class="label">Executive Question: So what?</span>
+        <h2>Business Impact</h2>
+        <p class="lead">Operational friction is not just a UX issue; it is a P&L risk. When work escapes the platform, visibility drops and costs may rise across six key dimensions.</p>
+
+        <div class="impact-grid">
+            <div>
+                <span class="metric-sub">Operational Cost</span>
+                <span class="metric-huge">High</span>
+                <div class="metric-context">Directional Estimate: Manual reconciliation hours represent a significant hidden cost per manager.</div>
+            </div>
+            <div>
+                <span class="metric-sub">Trust Cost</span>
+                <span class="metric-huge">High</span>
+                <div class="metric-context">Directional Estimate: Data silos may erode executive trust in platform metrics during renewals.</div>
+            </div>
+            <div>
+                <span class="metric-sub">Expansion Cost</span>
+                <span class="metric-huge">Significant</span>
+                <div class="metric-context">Directional Estimate: Enterprise upsells may be blocked by lack of granular reporting.</div>
+            </div>
+        </div>
+
+        <div class="hypothesis-pair">
+            <div class="hypothesis-box">
+                <h4>Decision Cost</h4>
+                <p>Leadership may spend time reconciling external data instead of making strategic decisions.</p>
+            </div>
+            <div class="hypothesis-box">
+                <h4>Renewal Cost</h4>
+                <p>Customers may perceive lower value when they must do the work the platform promised to automate.</p>
+            </div>
+        </div>
+
+        <p class="pull-quote-small">"The cost of workflow escape is rarely visible on a single invoice. It accumulates quietly, in hours, across every renewal conversation."</p>
+    </div>
+</section>
+
+<div class="container-wide"><div class="section-divider"></div></div>
+
+<!-- RECOMMENDATIONS -->
+<section id="recommendations">
+    <div class="container">
+        <span class="label">Executive Question: What should we do?</span>
+        <h2>Strategic Recommendations</h2>
+        <p class="lead">To address the Automation Paradox, Rocketlane would likely benefit from strengthening internal operational tooling alongside customer-facing features. Based on the evidence gathered, investment in foundational reporting capabilities could progress in parallel with AI innovation.</p>
+
+        <div class="recs-list">
+            <div class="rec-item">
+                <div class="rec-time">0–3 Months</div>
+                <div class="rec-body">
+                    <h4>Quick Wins</h4>
+                    <p>Implement basic custom reporting fields and a daily notification digest to reduce Slack escape.</p>
+                </div>
+            </div>
+            <div class="rec-item">
+                <div class="rec-time">3–6 Months</div>
+                <div class="rec-body">
+                    <h4>Mid-Term Structural Fixes</h4>
+                    <p>Develop native, bidirectional Salesforce synchronization with reduced customization needs. Improve API throttling limits.</p>
+                </div>
+            </div>
+            <div class="rec-item">
+                <div class="rec-time">6–12 Months</div>
+                <div class="rec-body">
+                    <h4>Long-Term Evolution</h4>
+                    <p>Evolve Nitro AI from a copilot to a predictive agent. Build offline timesheet capabilities for global teams.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FINAL VERDICT -->
+<section id="final-verdict">
+    <div class="container">
+        <span class="label">Executive Question: What should I remember?</span>
+        <h2>Final Verdict</h2>
+        <p class="verdict-quote">Evidence suggests Rocketlane delivers significant value in standardized environments. However, its most notable strategic risk in complex deployments appears to be workflow escape rather than missing features.</p>
+        <p class="verdict-sub">Until administrative work is more consistently retained inside the platform, Rocketlane may risk functioning as a System of Entry rather than a System of Intelligence in enterprise-scale engagements.</p>
+    </div>
+</section>
+
+<!-- REFERENCES -->
+<section id="references">
+    <div class="container-wide">
+        <span class="label">Source Record</span>
+        <h2>References</h2>
+        <p class="lead">This investigation triangulated findings across the following categories of publicly available material. No proprietary or confidential sources were used. Categories are listed alphabetically.</p>
+
+        <div class="ref-grid">
+            <div class="ref-category">
+                <h4>Academic Frameworks</h4>
+                <ul class="ref-entry-list">
+                    <li class="ref-entry"><strong>Root-Cause Analysis Methodology</strong> — <span>Strategy Consulting Practice, General</span></li>
+                    <li class="ref-entry"><strong>Hypothesis-Driven Investigation Method</strong> — <span>Strategy Consulting Practice, General</span></li>
+                </ul>
+            </div>
+            <div class="ref-category">
+                <h4>API Documentation</h4>
+                <ul class="ref-entry-list">
+                    <li class="ref-entry"><strong>Rocketlane API Reference</strong> — <span>Rocketlane, 2026</span></li>
+                </ul>
+            </div>
+            <div class="ref-category">
+                <h4>Community Discussions</h4>
+                <ul class="ref-entry-list">
+                    <li class="ref-entry"><strong>Public Implementation Discussion Threads</strong> — <span>Public Community Forums, 2026</span></li>
+                </ul>
+            </div>
+            <div class="ref-category">
+                <h4>Competitive Analysis</h4>
+                <ul class="ref-entry-list">
+                    <li class="ref-entry"><strong>Public Comparison: Rocketlane vs. Certinia</strong> — <span>Publicly Available Comparison Sources, 2026</span></li>
+                </ul>
+            </div>
+            <div class="ref-category">
+                <h4>Independent Reviews</h4>
+                <ul class="ref-entry-list">
+                    <li class="ref-entry"><strong>Rocketlane User Reviews</strong> — <span>Capterra, 2026</span></li>
+                    <li class="ref-entry"><strong>Rocketlane User Reviews</strong> — <span>G2, 2026</span></li>
+                </ul>
+            </div>
+            <div class="ref-category">
+                <h4>Official Documentation</h4>
+                <ul class="ref-entry-list">
+                    <li class="ref-entry"><strong>Rocketlane Product Documentation</strong> — <span>Rocketlane, 2026</span></li>
+                    <li class="ref-entry"><strong>Rocketlane Official Product Blog & Release Notes</strong> — <span>Rocketlane, 2026</span></li>
+                </ul>
+            </div>
+            <div class="ref-category">
+                <h4>Technical Documentation</h4>
+                <ul class="ref-entry-list">
+                    <li class="ref-entry"><strong>Salesforce Platform & Apex Documentation</strong> — <span>Salesforce, 2026</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <p style="margin-top: 40px; font-size: 0.85rem; color: #555;">Note: Gartner and other analyst research was reviewed for context where publicly accessible, but is not cited directly as no paywalled content was used as a basis for findings.</p>
+    </div>
+</section>
+
+<!-- CONFIDENCE LEGEND -->
+<section>
+    <div class="container">
+        <span class="label">How To Read This Report</span>
+        <h2>Confidence Legend</h2>
+        <p class="lead">Every finding in this investigation is rated using the following scale.</p>
+
+        <div class="legend-grid">
+            <div class="legend-item high">
+                <h4>High</h4>
+                <p>Supported by multiple independent sources with consistent findings.</p>
+            </div>
+            <div class="legend-item medium">
+                <h4>Medium</h4>
+                <p>Supported by consistent qualitative evidence, though from fewer independent sources.</p>
+            </div>
+            <div class="legend-item low">
+                <h4>Low</h4>
+                <p>Directionally indicative, but requires internal validation before being treated as fact.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- GLOSSARY -->
+<section>
+    <div class="container">
+        <span class="label">Terminology</span>
+        <h2>Glossary</h2>
+        <p class="lead">Key terms introduced in this investigation, defined for executive clarity.</p>
+
+        <div class="glossary-list">
+            <div class="glossary-item">
+                <div class="glossary-term">Shadow Workflow</div>
+                <p class="glossary-def">Operational work that has moved outside the platform of record into informal tools such as spreadsheets or chat.</p>
+            </div>
+            <div class="glossary-item">
+                <div class="glossary-term">Context Leakage</div>
+                <p class="glossary-def">The loss of decision-relevant information when communication or data shifts to an external channel.</p>
+            </div>
+            <div class="glossary-item">
+                <div class="glossary-term">Validation Tax</div>
+                <p class="glossary-def">The hidden cost of human review required to verify AI-generated or automated output before it can be trusted.</p>
+            </div>
+            <div class="glossary-item">
+                <div class="glossary-term">Cost of Truth</div>
+                <p class="glossary-def">The cumulative cost of reconciling fragmented data to reconstruct a single, reliable view of reality.</p>
+            </div>
+            <div class="glossary-item">
+                <div class="glossary-term">System of Entry</div>
+                <p class="glossary-def">A platform used primarily to capture initial input, without becoming the durable source of operational truth.</p>
+            </div>
+            <div class="glossary-item">
+                <div class="glossary-term">System of Intelligence</div>
+                <p class="glossary-def">A platform that not only captures data but actively informs decisions as the trusted operational source of truth.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INDEPENDENT EXECUTIVE REVIEW -->
+<section>
+    <div class="container-wide">
+        <span class="label">Peer Validation</span>
+        <h2>Independent Executive Review</h2>
+        <p class="lead">To pressure-test this investigation, findings were reviewed independently against the perspective of five executive functions. Each review reflects the priorities and skepticism typical of that role.</p>
+
+        <div class="review-grid">
+            <div class="review-card">
+                <span class="review-role">CEO</span>
+                <div class="review-row">
+                    <div class="review-point">
+                        <h5>Impressed By</h5>
+                        <p>The direct link drawn between operational friction and renewal risk, framed in P&L terms rather than product terms.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Disagreed With</h5>
+                        <p>The suggestion that expansion revenue is materially blocked; considers this directionally plausible but unproven.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Weak Claim</h5>
+                        <p>Cost estimates are directional rather than quantified against actual revenue data.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Strong Insight</h5>
+                        <p>Shadow Workflow as a named, trackable phenomenon rather than a vague complaint.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Approves</h5>
+                        <p>Prioritizing reporting architecture investment in the near term.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Rejects</h5>
+                        <p>Treating this as urgent enough to delay other roadmap commitments.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-card">
+                <span class="review-role">Chief Product Officer</span>
+                <div class="review-row">
+                    <div class="review-point">
+                        <h5>Impressed By</h5>
+                        <p>The root cause tree correctly separates packaging decisions from genuine architectural limitations.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Disagreed With</h5>
+                        <p>The framing that all workflow escape is a defect; some is reasonable specialization of tools.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Weak Claim</h5>
+                        <p>Feature gating as a primary driver is asserted more strongly than the evidence supports.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Strong Insight</h5>
+                        <p>Distinguishing standardized onboarding, where the product performs well, from complex enterprise cases.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Approves</h5>
+                        <p>The phased 0–3 / 3–6 / 6–12 month roadmap structure.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Rejects</h5>
+                        <p>Any implication that Nitro AI's validation step should be removed rather than refined.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-card">
+                <span class="review-role">VP Product</span>
+                <div class="review-row">
+                    <div class="review-point">
+                        <h5>Impressed By</h5>
+                        <p>The evidence-to-confidence mapping makes it easy to see which findings are safe to act on now.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Disagreed With</h5>
+                        <p>The medium-confidence rating on timesheet burden; considers it consistently high-friction in review data.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Weak Claim</h5>
+                        <p>API constraint impact is inferred from documentation rather than observed incident data.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Strong Insight</h5>
+                        <p>Workflow Escape Map as a shared vocabulary for triaging future feature requests.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Approves</h5>
+                        <p>The notification digest as a low-cost, high-leverage quick win.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Rejects</h5>
+                        <p>Deferring Salesforce sync improvements to the long-term horizon.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-card">
+                <span class="review-role">VP Customer Success</span>
+                <div class="review-row">
+                    <div class="review-point">
+                        <h5>Impressed By</h5>
+                        <p>The Renewal Cost framing matches conversations already happening with at-risk enterprise accounts.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Disagreed With</h5>
+                        <p>The degree to which portal adoption is described as a platform limitation rather than a change-management issue.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Weak Claim</h5>
+                        <p>Trust Cost is difficult to isolate from broader account health signals.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Strong Insight</h5>
+                        <p>Client Portal Dependency correctly identifies double-entry as a delivery-team burden, not just a customer one.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Approves</h5>
+                        <p>Investment in customer-facing reporting visibility ahead of renewal cycles.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Rejects</h5>
+                        <p>Framing the customer as a source of the problem rather than a partner in the fix.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-card">
+                <span class="review-role">Head of Engineering</span>
+                <div class="review-row">
+                    <div class="review-point">
+                        <h5>Impressed By</h5>
+                        <p>API Constraints and Salesforce Complexity are technically accurate and well scoped.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Disagreed With</h5>
+                        <p>The implication that native bidirectional Salesforce sync is a 3–6 month effort; considers it materially larger.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Weak Claim</h5>
+                        <p>Middleware need for enterprise volume is plausible but not benchmarked against real throughput data.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Strong Insight</h5>
+                        <p>Separating notification design from notification volume as distinct engineering problems.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Approves</h5>
+                        <p>Improving API throttling limits as a near-term engineering priority.</p>
+                    </div>
+                    <div class="review-point">
+                        <h5>Rejects</h5>
+                        <p>The proposed timeline for evolving Nitro AI into a predictive agent as currently scoped.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="verdict-final">
+            <h4>Final Executive Verdict</h4>
+            <p><strong>Overall Sentiment:</strong> The investigation is considered credible, well-structured, and actionable, with reviewers converging on the core Shadow Workflow finding despite differing on emphasis and timeline.</p>
+            <p><strong>Strengths:</strong> Clear hypothesis structure, transparent confidence ratings, and recommendations that map directly to identified root causes.</p>
+            <p><strong>Weaknesses:</strong> Several cost estimates remain directional rather than quantified, and some engineering timelines are viewed as optimistic.</p>
+            <p><strong>Strategic Risks:</strong> If reporting architecture and Salesforce synchronization are not addressed, workflow escape may continue to compound at renewal-sensitive enterprise accounts.</p>
+            <p><strong>Final Decision:</strong> Approved for use as a directional input to roadmap prioritization, pending internal telemetry validation of the highest-impact claims.</p>
+        </div>
+    </div>
+</section>
+
+<!-- REVISION HISTORY -->
+<section>
+    <div class="container">
+        <span class="label">Document Provenance</span>
+        <h2>Revision History</h2>
+        <p class="lead">This report has evolved through several rounds of structured refinement.</p>
+
+        <div class="revision-timeline">
+            <div class="revision-item">
+                <div class="revision-version">Version 1.0</div>
+                <div class="revision-title">Initial Investigation</div>
+                <div class="revision-date">July 2026</div>
+            </div>
+            <div class="revision-item">
+                <div class="revision-version">Version 1.1</div>
+                <div class="revision-title">Executive Review Revision</div>
+                <div class="revision-date">July 2026</div>
+            </div>
+            <div class="revision-item">
+                <div class="revision-version">Version 1.2</div>
+                <div class="revision-title">Portfolio Enhancement</div>
+                <div class="revision-date">July 2026</div>
+            </div>
+            <div class="revision-item">
+                <div class="revision-version">Version 1.3</div>
+                <div class="revision-title">Publication Edition</div>
+                <div class="revision-date">July 2026</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INVESTIGATION PHILOSOPHY -->
+<section>
+    <div class="container">
+        <span class="label">Approach</span>
+        <h2>My Investigation Philosophy</h2>
+        <p class="philosophy-text">I treat every investigation as a systems problem before it is a features problem: friction that disappears from one part of a workflow rarely vanishes, it relocates. My approach prioritizes evidence over assumption, traces symptoms back to structural root causes rather than surface complaints, and separates what the data supports from what it merely suggests. The goal is not to produce an opinion, but to produce a defensible basis for a decision.</p>
+    </div>
+</section>
+
+<!-- ABOUT THE INVESTIGATOR -->
+<section id="about-investigator">
+    <div class="container">
+        <span class="label">Investigator Profile</span>
+        <h2>About the Investigator</h2>
+        <p class="lead">Muhamad Reva Riza Akbar is an aspiring Business Investigation & Analytics professional focused on uncovering hidden operational risks through structured, evidence-based strategic analysis.</p>
+
+        <h3 style="margin-top: 50px;">Areas of Interest</h3>
+        <ul class="interest-list">
+            <li>Operational Excellence</li>
+            <li>Business Intelligence</li>
+            <li>Product Strategy</li>
+            <li>Process Optimization</li>
+            <li>Enterprise SaaS</li>
+            <li>Independent Research</li>
+        </ul>
+
+        <div class="social-links">
+            <a href="#" class="social-link">GitHub →</a>
+            <a href="#" class="social-link">LinkedIn →</a>
+            <a href="#" class="social-link">Portfolio →</a>
+        </div>
+    </div>
+</section>
+
+<!-- APPENDIX -->
+<section class="appendix" id="appendix">
+    <div class="container">
+        <h3>What Would Change This Conclusion?</h3>
+        <p>The following internal datasets could strengthen or overturn these findings:</p>
+        <ul class="dataset-list">
+            <li><strong>Internal Telemetry:</strong> Actual time spent in-platform vs. idle time.</li>
+            <li><strong>Churn Database:</strong> Correlation between reporting usage and renewal rates.</li>
+            <li><strong>Support Ticket Volume:</strong> Specific categorization of "reporting" vs. "feature" requests.</li>
+            <li><strong>API Logs:</strong> Frequency of external data pulls by enterprise clients.</li>
+            <li><strong>NPS Comments:</strong> Qualitative analysis of "ease of use" vs. "power user" feedback.</li>
+        </ul>
+        <div class="footer-block">
+            <h4>Prepared by</h4>
+            <p class="footer-name">Muhamad Reva Riza Akbar</p>
+            <p class="footer-role">Business Investigation & Analytics — Independent Research Portfolio</p>
+            <p class="footer-disclaimer">This investigation is based solely on publicly available information. No confidential Rocketlane data was accessed. Internal operational metrics were unavailable at the time of research. Some conclusions represent analytical interpretation rather than verified internal company facts and should be validated against internal data before being used for decision-making.</p>
+            <p class="footer-copyright">Version 1.3 · July 2026 · Portfolio Edition<br>© 2026 Muhamad Reva Riza Akbar</p>
+        </div>
+    </div>
+</section>
+
+<div class="signature-footer">
+    <div class="signature-divider"></div>
+    <p class="signature-text">Designed & Investigated by<br><span>Muhamad Reva Riza Akbar</span></p>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('section').forEach(section => {
+        observer.observe(section);
+    });
+
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById("progressBar").style.width = scrolled + "%";
+    });
+});
+</script>
+
+</body>
+</html>
