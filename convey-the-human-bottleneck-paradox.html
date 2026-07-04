@@ -1,0 +1,1998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CONVEY — The Human Bottleneck Paradox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Premium Elegant Color Palette */
+  --bg: #F9F5F0;
+  --ink: #1A1A1A;
+  --sub: #5A5A5A;
+  --fact: #0A2448;
+  --infer: #B86518;
+  --hypo: #6B1A1A;
+  --line: rgba(26,26,26,0.08);
+  --line-strong: rgba(26,26,26,0.16);
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Inter', -apple-system, sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+  --max: 900px;
+  --dark-bg: #121212;
+  --dark-ink: #F2EFE8;
+  --elevated-bg: #FFFFFF;
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --glow-fact: 0 0 20px rgba(10,36,72,0.15);
+  --glow-infer: 0 0 20px rgba(184,101,24,0.15);
+}
+
+*{
+  box-sizing: border-box;
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior: auto;}
+  *{animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important;}
+}
+
+body{
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Premium Background Texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255,245,240,0) 0%, rgba(249,245,240,1) 100%),
+    linear-gradient(to bottom, rgba(250,240,235,0.3) 0%, rgba(249,245,240,0) 100%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.05;
+  margin: 0;
+  color: var(--ink);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+a:hover {
+  color: var(--fact);
+}
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* SECTIONS */
+.section {
+  padding: 120px 0;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+
+.section::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+}
+
+.section.dark {
+  background: var(--dark-bg);
+  color: var(--dark-ink);
+  border-bottom: none;
+}
+
+.section.dark::after {
+  background: linear-gradient(90deg, transparent, rgba(242,239,232,0.12), transparent);
+}
+
+/* PROGRESS BAR */
+#progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--fact), var(--infer), var(--hypo));
+  width: 0%;
+  z-index: 999;
+  transition: width 0.2s ease;
+  border-radius: 0 2px 2px 0;
+}
+
+/* NAV DOTS */
+#navdots {
+  position: fixed;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#navdots button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: var(--transition);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+#navdots button:hover {
+  transform: scale(1.2);
+  border-color: var(--fact);
+  box-shadow: 0 0 0 4px rgba(10,36,72,0.1);
+}
+
+#navdots button.active {
+  background: var(--fact);
+  border-color: var(--fact);
+  box-shadow: var(--glow-fact);
+}
+
+@media (max-width: 820px) {
+  #navdots { display: none; }
+}
+
+/* EYEBROW */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sub);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+  display: inline-block;
+  transition: var(--transition);
+}
+
+/* TITLES */
+h1 {
+  font-size: clamp(2.6rem, 7vw, 4.6rem);
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  color: var(--sub);
+  font-style: italic;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+p {
+  max-width: 66ch;
+  margin: 16px 0;
+}
+
+.lead {
+  font-size: 1.25rem;
+  max-width: 58ch;
+  color: var(--ink);
+  line-height: 1.8;
+  margin: 24px 0;
+  letter-spacing: -0.01em;
+}
+
+.small {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--sub);
+  letter-spacing: 0.03em;
+  line-height: 1.5;
+}
+
+/* TAGS */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  transition: var(--transition);
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+.tag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.tag.fact {
+  background: rgba(10,36,72,0.04);
+  border: 1px solid rgba(10,36,72,0.2);
+  color: var(--fact);
+}
+
+.tag.infer {
+  background: rgba(184,101,24,0.04);
+  border: 1px dashed rgba(184,101,24,0.25);
+  color: var(--infer);
+}
+
+.tag.hypo {
+  background: rgba(107,26,26,0.04);
+  border: 2px solid rgba(107,26,26,0.2);
+  color: var(--hypo);
+}
+
+.tag.unknown {
+  background: rgba(90,90,90,0.04);
+  border: 1px dotted rgba(90,90,90,0.25);
+  color: var(--sub);
+}
+
+.tag.model {
+  background: rgba(90,90,90,0.04);
+  border: 1px solid rgba(90,90,90,0.2);
+  color: var(--sub);
+  font-style: italic;
+}
+
+.tag.competing {
+  background: rgba(184,101,24,0.04);
+  border: 3px double rgba(184,101,24,0.25);
+  color: var(--infer);
+}
+
+.dark .tag.fact {
+  color: #8AB8E0;
+  border-color: rgba(138,184,232,0.3);
+  background: rgba(138,184,232,0.06);
+}
+
+.dark .tag.infer {
+  color: #F0B88C;
+  border-color: rgba(240,184,140,0.3);
+  background: rgba(240,184,140,0.06);
+}
+
+.dark .tag.hypo {
+  color: #E8A0A0;
+  border-color: rgba(232,160,160,0.3);
+  background: rgba(232,160,160,0.06);
+}
+
+.dark .tag.unknown {
+  color: #B0B0B0;
+  border-color: rgba(176,176,176,0.3);
+  background: rgba(176,176,176,0.06);
+}
+
+/* BLOCKQUOTES */
+blockquote.central {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.5rem, 3.4vw, 2.3rem);
+  max-width: 16ch;
+  margin: 36px 0;
+  padding-left: 28px;
+  border-left: 2px solid var(--fact);
+  line-height: 1.45;
+  color: var(--fact);
+}
+
+.dark blockquote.central {
+  border-left-color: var(--dark-ink);
+  color: var(--dark-ink);
+}
+
+/* CARDS */
+.card {
+  background: var(--elevated-bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 36px;
+  margin: 36px 0;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--fact);
+  transform: translateY(-1px);
+}
+
+.card h4 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--sub);
+  margin-bottom: 14px;
+}
+
+.card .model-title {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+
+.dark .card {
+  background: rgba(242,239,232,0.03);
+  border-color: rgba(242,239,232,0.12);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+.dark .card h4 {
+  color: #999;
+}
+
+.dark .card .model-title {
+  color: var(--dark-ink);
+}
+
+/* ARCHITECTURE ACCORDION */
+.arch {
+  margin-top: 48px;
+}
+
+.layer {
+  border: 1px solid var(--line-strong);
+  border-top: none;
+  border-radius: 0 0 14px 14px;
+  overflow: hidden;
+}
+
+.layer:first-child {
+  border-top: 1px solid var(--line-strong);
+  border-radius: 14px 14px 0 0;
+}
+
+.layer-head {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--sans);
+  color: inherit;
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: var(--transition);
+  border-bottom: 1px solid var(--line);
+}
+
+.layer-head:hover {
+  background: rgba(10,36,72,0.01);
+}
+
+.layer-head:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--fact);
+  outline-offset: 3px;
+}
+
+.layer-num {
+  font-family: var(--mono);
+  color: var(--sub);
+  font-size: 12px;
+  margin-right: 16px;
+  font-weight: 500;
+}
+
+.layer-plus {
+  font-family: var(--mono);
+  font-size: 22px;
+  transition: transform 0.3s ease;
+  color: var(--sub);
+}
+
+.layer[data-open="true"] .layer-plus {
+  transform: rotate(45deg);
+}
+
+.layer-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(0,0,0,0.005);
+}
+
+.layer[data-open="true"] .layer-body {
+  max-height: 800px;
+}
+
+.layer-body-inner {
+  padding: 0 28px 30px 28px;
+  display: grid;
+  gap: 18px;
+}
+
+.layer-body-inner .field-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--infer);
+  margin-bottom: 6px;
+}
+
+.axis-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--sub);
+  margin-top: 20px;
+  letter-spacing: 0.05em;
+}
+
+/* MATRIX */
+.matrix-wrap {
+  margin-top: 36px;
+  overflow-x: auto;
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+}
+
+.table.matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 760px;
+}
+
+.table.matrix th,
+.table.matrix td {
+  border: 1px solid var(--line-strong);
+  padding: 14px 16px;
+  text-align: left;
+  vertical-align: top;
+  transition: var(--transition);
+}
+
+.table.matrix th {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--elevated-bg);
+  color: var(--sub);
+  font-weight: 500;
+}
+
+.table.matrix tr {
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.table.matrix tr:hover {
+  background: rgba(10,36,72,0.03);
+}
+
+.strength-strong {
+  color: var(--fact);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+.strength-limited {
+  color: var(--sub);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+.cards-wrap {
+  display: none;
+  margin-top: 36px;
+  gap: 18px;
+  flex-direction: column;
+}
+
+.dossier-card {
+  border: 1px solid var(--line-strong);
+  padding: 22px;
+  border-radius: 12px;
+  transition: var(--transition);
+}
+
+.dossier-card:hover {
+  box-shadow: var(--shadow-sm);
+  border-color: var(--fact);
+}
+
+.dossier-card h4 {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+
+.dossier-card .meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--sub);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  letter-spacing: 0.04em;
+}
+
+.dossier-card button.expand-btn {
+  margin-top: 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  background: none;
+  border: 1px solid var(--line-strong);
+  padding: 10px 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.dossier-card button.expand-btn:hover {
+  background: rgba(10,36,72,0.03);
+  border-color: var(--fact);
+}
+
+@media (max-width: 760px) {
+  .matrix-wrap { display: none; }
+  .cards-wrap { display: flex; }
+}
+
+.dossier-detail {
+  display: none;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.dossier-detail[data-open="true"] {
+  display: block;
+}
+
+.dossier-detail .field {
+  margin-bottom: 16px;
+}
+
+.dossier-detail .field-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  color: var(--infer);
+  letter-spacing: 0.07em;
+  margin-bottom: 6px;
+}
+
+/* MODAL */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  backdrop-filter: blur(6px);
+}
+
+.modal-backdrop.open {
+  display: flex;
+}
+
+.modal {
+  background: var(--elevated-bg);
+  max-width: 680px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 40px;
+  border-radius: 20px;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--line-strong);
+}
+
+.dark .modal {
+  background: var(--dark-bg);
+  color: var(--dark-ink);
+  border-color: rgba(242,239,232,0.12);
+}
+
+.modal button.close {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  font-family: var(--mono);
+  color: var(--sub);
+  transition: var(--transition);
+  line-height: 1;
+}
+
+.modal button.close:hover {
+  color: var(--fact);
+  transform: rotate(90deg);
+}
+
+/* EQUATION */
+.equation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-family: var(--mono);
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  text-align: center;
+  margin: 48px 0;
+  padding: 40px 24px;
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+  background: rgba(0,0,0,0.005);
+  border-radius: 14px;
+}
+
+.equation .op {
+  font-size: 1.8rem;
+  color: var(--sub);
+  font-weight: 300;
+}
+
+.equation .result {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-style: italic;
+  color: var(--fact);
+}
+
+/* MISSING LIST */
+.missing-list {
+  list-style: none;
+  padding: 0;
+  margin: 32px 0;
+  display: grid;
+  gap: 20px;
+}
+
+.missing-list li {
+  border-left: 2px dotted var(--sub);
+  padding-left: 20px;
+}
+
+.missing-list .num {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--sub);
+}
+
+.missing-list strong {
+  display: block;
+  font-size: 1.1rem;
+  margin: 6px 0;
+}
+
+/* TWO COLUMN */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin-top: 48px;
+  border: 1px solid rgba(242,239,232,0.14);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.two-col > div {
+  padding: 36px;
+  border-right: 1px solid rgba(242,239,232,0.14);
+  background: rgba(242,239,232,0.02);
+}
+
+.two-col > div:last-child {
+  border-right: none;
+}
+
+@media (max-width: 700px) {
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+  .two-col > div {
+    border-right: none;
+    border-bottom: 1px solid rgba(242,239,232,0.14);
+  }
+}
+
+/* HYPOTHESIS TOGGLE */
+.hyp-toggle {
+  display: flex;
+  gap: 0;
+  margin-top: 40px;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.hyp-toggle button {
+  flex: 1;
+  padding: 20px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-right: 1px solid var(--line-strong);
+  color: var(--sub);
+  transition: var(--transition);
+  font-weight: 500;
+}
+
+.hyp-toggle button:last-child {
+  border-right: none;
+}
+
+.hyp-toggle button:hover {
+  background: rgba(0,0,0,0.02);
+}
+
+.hyp-toggle button.active {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.hyp-panels {
+  margin-top: 0;
+  border: 1px solid var(--line-strong);
+  border-top: none;
+  border-radius: 0 0 14px 14px;
+  padding: 36px;
+  background: rgba(0,0,0,0.005);
+}
+
+.hyp-panel {
+  display: none;
+}
+
+.hyp-panel.active {
+  display: block;
+}
+
+.hyp-panel .field {
+  margin-bottom: 22px;
+}
+
+.hyp-panel .field-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--infer);
+  margin-bottom: 8px;
+}
+
+.missing-metric {
+  margin-top: 28px;
+  padding: 24px;
+  border: 1px dashed var(--sub);
+  background: rgba(90,90,90,0.02);
+  border-radius: 12px;
+}
+
+.missing-metric .field-label {
+  color: var(--sub);
+}
+
+/* MECHANISM FLOW */
+.mech-flow {
+  margin-top: 48px;
+}
+
+.mech-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+  justify-content: center;
+}
+
+.mech-node {
+  flex: 0 0 auto;
+  min-width: 160px;
+  border: 1px solid var(--line-strong);
+  padding: 18px 20px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 10px;
+  transition: var(--transition);
+  background: var(--elevated-bg);
+}
+
+.mech-node:hover,
+.mech-node.active {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.mech-arrow {
+  font-family: var(--mono);
+  color: var(--sub);
+  flex: 0 0 auto;
+  font-size: 18px;
+}
+
+.mech-branches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+  margin-top: 32px;
+}
+
+.mech-branch {
+  border: 1px solid var(--line-strong);
+  padding: 24px;
+  border-radius: 12px;
+  background: var(--elevated-bg);
+}
+
+.mech-branch h5 {
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 16px;
+  color: var(--infer);
+}
+
+.mech-branch .b-step {
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 14.5px;
+}
+
+.mech-branch .b-step:last-child {
+  border-bottom: none;
+}
+
+.mech-detail {
+  margin-top: 26px;
+  padding: 26px;
+  border: 1px solid var(--line-strong);
+  display: none;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.01);
+  box-shadow: var(--shadow-sm);
+}
+
+.mech-detail.open {
+  display: block;
+}
+
+@media (max-width: 700px) {
+  .mech-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .mech-arrow {
+    text-align: center;
+  }
+  .mech-branches {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* SYSTEM MAP */
+.system-map {
+  margin-top: 52px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.system-node {
+  border: 2px solid rgba(242,239,232,0.2);
+  padding: 30px 24px;
+  cursor: pointer;
+  background: rgba(242,239,232,0.03);
+  text-align: left;
+  font-family: var(--sans);
+  color: inherit;
+  border-radius: 16px;
+  transition: var(--transition);
+}
+
+.system-node:hover {
+  border-color: rgba(242,239,232,0.4);
+  background: rgba(242,239,232,0.06);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.system-node h4 {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+
+.system-node .small {
+  color: #B8B8B8;
+}
+
+.system-node[data-open="true"] {
+  background: rgba(242,239,232,0.08);
+  border-color: rgba(242,239,232,0.5);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.tension-row {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.tension {
+  border-left: 2px solid var(--infer);
+  padding: 16px 20px;
+  font-size: 14.5px;
+  background: rgba(242,239,232,0.03);
+  border-radius: 0 10px 10px 0;
+  color: var(--dark-ink);
+}
+
+.system-detail {
+  margin-top: 28px;
+  padding: 28px;
+  border: 1px solid rgba(242,239,232,0.24);
+  display: none;
+  border-radius: 16px;
+  background: rgba(242,239,232,0.03);
+}
+
+.system-detail.open {
+  display: block;
+}
+
+.system-detail .field {
+  margin-bottom: 18px;
+}
+
+.system-detail .field-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #E3A96A;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 760px) {
+  .system-map {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* VALUE LAYERS */
+.value-layers {
+  margin-top: 48px;
+  display: grid;
+  gap: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.value-layer {
+  border: 1px solid var(--line-strong);
+  border-top: none;
+}
+
+.value-layer:first-child {
+  border-top: 1px solid var(--line-strong);
+}
+
+.value-layer-head {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 22px 24px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--sans);
+  color: inherit;
+  transition: var(--transition);
+}
+
+.value-layer-head:hover {
+  background: rgba(10,36,72,0.01);
+}
+
+.value-layer-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.value-layer[data-open="true"] .value-layer-body {
+  max-height: 600px;
+}
+
+.value-layer-body-inner {
+  padding: 0 24px 26px 24px;
+  display: grid;
+  gap: 16px;
+}
+
+.value-layer-body-inner .field-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  color: var(--infer);
+  letter-spacing: 0.07em;
+  margin-bottom: 5px;
+}
+
+/* FINAL QUESTIONS */
+.final-q {
+  list-style: none;
+  padding: 0;
+  margin: 42px 0;
+  display: grid;
+  gap: 24px;
+}
+
+.final-q li {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-style: italic;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 20px;
+}
+
+/* APPENDIX */
+.appendix-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+@media (max-width: 700px) {
+  .appendix-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.appendix-grid h4 {
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--sub);
+  margin-bottom: 16px;
+}
+
+.appendix-grid ul {
+  padding-left: 18px;
+  margin: 0;
+}
+
+.appendix-grid li {
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+
+.source-note {
+  margin-top: 32px;
+  padding: 22px;
+  border: 1px dashed var(--sub);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--sub);
+  border-radius: 10px;
+  background: rgba(90,90,90,0.01);
+}
+
+.footer-note {
+  text-align: center;
+  padding: 64px 0;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--sub);
+  letter-spacing: 0.02em;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 10px 16px;
+  z-index: 2000;
+}
+
+.skip-link:focus {
+  left: 10px;
+  top: 10px;
+}
+
+.compare-note {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--sub);
+  border: 1px dashed var(--line-strong);
+  padding: 14px 16px;
+  margin-top: 18px;
+  display: inline-block;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.01);
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .wrap {
+    padding: 0 20px;
+  }
+  
+  .section {
+    padding: 80px 0;
+  }
+  
+  .card {
+    padding: 28px;
+  }
+  
+  .equation {
+    padding: 32px 18px;
+    gap: 14px;
+  }
+  
+  .mech-node {
+    min-width: 140px;
+    padding: 14px 16px;
+    font-size: 12px;
+  }
+  
+  .system-node {
+    padding: 24px 20px;
+  }
+  
+  .system-node h4 {
+    font-size: 1.4rem;
+  }
+  
+  .value-layer-head {
+    padding: 18px 20px;
+    font-size: 0.95rem;
+  }
+  
+  .final-q li {
+    font-size: 1.4rem;
+  }
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(26,26,26,0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(26,26,26,0.3);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(242,239,232,0.15);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(242,239,232,0.25);
+}
+
+/* SELECTION */
+::selection {
+  background: rgba(10,36,72,0.15);
+  color: var(--fact);
+}
+
+.dark ::selection {
+  background: rgba(242,239,232,0.2);
+  color: var(--dark-ink);
+}
+
+/* FOCUS */
+:focus-visible {
+  outline: 2px solid var(--fact);
+  outline-offset: 2px;
+}
+
+.dark :focus-visible {
+  outline: 2px solid #8AB8E0;
+}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<div id="progress"></div>
+<nav id="navdots" aria-label="Section navigation"></nav>
+
+<main id="main">
+
+<!-- PROLOGUE -->
+<section class="section" id="s-prologue" data-title="Prologue">
+  <div class="wrap">
+    <div class="eyebrow">Prologue</div>
+    <h1 style="font-size:clamp(2.6rem,7vw,4.6rem);">CONVEY</h1>
+    <h3 class="subtitle">The Human Bottleneck Paradox</h3>
+    <p class="lead">Convey promises a new model of enterprise automation: instead of employees manually performing repetitive workflows, non-technical operators show the work, and Convey creates digital teammates capable of executing those workflows across enterprise software.</p>
+    <div style="margin-top:24px;">
+      <span class="tag fact">What We Know</span>
+      <p>The promise is speed and scale. But as we peel back the layers of this operational model, a deeper question emerges. It is not whether the AI can do the work.</p>
+    </div>
+    <blockquote class="central">"What infrastructure is required to scale digital labor, and can that infrastructure itself scale efficiently?"</blockquote>
+    <p>This investigation does not assume the answer is known. It examines the structural requirements of scaling automation beyond the initial deployment.</p>
+
+    <div class="card">
+      <h4>Explanatory Model — Not Empirical Evidence</h4>
+      <div class="model-title">The Factory Robot</div>
+      <p>Imagine replacing 100 factory workers with 100 robots. Productivity spikes initially. But the factory soon discovers it needs technicians to install them, engineers to connect them, and specialists to repair them when they jam.</p>
+      <p>Scaling automation requires more than just the agents. It requires a supporting infrastructure to keep them running.</p>
+    </div>
+
+    <p class="small" style="margin-top:32px; font-style:italic;">To understand if Convey has built this infrastructure, we must first examine how its technology differs from raw AI models.</p>
+  </div>
+</section>
+
+<!-- ACT I -->
+<section class="section" id="s-act1" data-title="Act I">
+  <div class="wrap">
+    <div class="eyebrow">Act I</div>
+    <h2 class="title">Technical Differentiation — The Compilation Layer</h2>
+    <p class="lead">Convey does not compete primarily by developing frontier foundation models. Its potential differentiation appears to sit above the model layer, where probabilistic capabilities are translated into controlled enterprise execution.</p>
+    <span class="tag infer">What The Evidence Suggests</span>
+    <p>While raw computer-use agents operate in a probabilistic loop, Convey appears to constrain this improvisation through a layered architecture.</p>
+
+    <p class="small" style="margin-top:32px;">Compilation &amp; Governance Architecture — Analytical Reconstruction, Based On Public Product Descriptions. Not A Verified Internal Systems Diagram.</p>
+    <div class="axis-labels">
+      <span>← Model Capability / Flexibility / Uncertainty</span>
+      <span>Control Infrastructure / Testability / Governance →</span>
+    </div>
+
+    <div class="arch" role="group" aria-label="Compilation and governance architecture layers">
+      <div class="layer" data-open="false">
+        <button class="layer-head" aria-expanded="false">
+          <span><span class="layer-num">01</span>Probabilistic Perception</span>
+          <span class="layer-plus">+</span>
+        </button>
+        <div class="layer-body">
+          <div class="layer-body-inner">
+            <div><div class="field-label">Function</div><p style="margin:0;">AI models interpret screens, interfaces, and user demonstrations.</p></div>
+            <div><div class="field-label">Why It Matters</div><p style="margin:0;">Provides flexibility across diverse software environments without custom APIs.</p></div>
+            <div><div class="field-label">Constraint / Unknown</div><p style="margin:0;">Probabilistic outputs introduce uncertainty. The model might "see" incorrectly.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="layer" data-open="false">
+        <button class="layer-head" aria-expanded="false">
+          <span><span class="layer-num">02</span>Workflow Interpretation</span>
+          <span class="layer-plus">+</span>
+        </button>
+        <div class="layer-body">
+          <div class="layer-body-inner">
+            <div><div class="field-label">Function</div><p style="margin:0;">Observed actions are translated into workflow logic and business context.</p></div>
+            <div><div class="field-label">Why It Matters</div><p style="margin:0;">The system must understand not only what happened, but why.</p></div>
+            <div><div class="field-label">Constraint / Unknown</div><p style="margin:0;">Enterprise processes often contain undocumented assumptions that are hard to infer.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="layer" data-open="false">
+        <button class="layer-head" aria-expanded="false">
+          <span><span class="layer-num">03</span>Compiled Execution Logic</span>
+          <span class="layer-plus">+</span>
+        </button>
+        <div class="layer-body">
+          <div class="layer-body-inner">
+            <div><div class="field-label">Function</div><p style="margin:0;">Interpreted workflows are transformed into more controlled execution structures.</p></div>
+            <div><div class="field-label">Why It Matters</div><p style="margin:0;">Potentially reduces reliance on continuous AI improvisation, increasing reliability.</p></div>
+            <div><div class="field-label">Constraint / Unknown</div><p style="margin:0;">Does not guarantee perfect deterministic execution; edge cases may still require probabilistic handling.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="layer" data-open="false">
+        <button class="layer-head" aria-expanded="false">
+          <span><span class="layer-num">04</span>Versioning &amp; Validation</span>
+          <span class="layer-plus">+</span>
+        </button>
+        <div class="layer-body">
+          <div class="layer-body-inner">
+            <div><div class="field-label">Function</div><p style="margin:0;">Workflows can potentially be tested, monitored, updated, and managed over time.</p></div>
+            <div><div class="field-label">Why It Matters</div><p style="margin:0;">Enterprise automation requires change management, not only initial execution.</p></div>
+            <div><div class="field-label">Constraint / Unknown</div><p style="margin:0;">Exact internal implementation details are not publicly available.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="layer" data-open="false">
+        <button class="layer-head" aria-expanded="false">
+          <span><span class="layer-num">05</span>Enterprise Governance</span>
+          <span class="layer-plus">+</span>
+        </button>
+        <div class="layer-body">
+          <div class="layer-body-inner">
+            <div><div class="field-label">Function</div><p style="margin:0;">Permissions, identity, auditability, and organizational control.</p></div>
+            <div><div class="field-label">Why It Matters</div><p style="margin:0;">Enterprise adoption requires robust infrastructure around execution.</p></div>
+            <div><div class="field-label">Constraint / Unknown</div><p style="margin:0;">Governance capability does not automatically prove economic scalability.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:52px;">
+      <div class="eyebrow">Strategic Synthesis</div>
+      <h3 style="font-family:var(--serif); font-size:1.7rem; font-weight:400;">The Strategic Bet</h3>
+      <span class="tag infer">What The Evidence Suggests</span>
+      <p>Convey's architecture suggests a specific strategic bet: as model capabilities improve, enterprise value may accumulate not only in what AI can do, but in the infrastructure that determines how reliably, safely, and repeatedly those capabilities can operate inside organizations.</p>
+      <blockquote class="central" style="font-size:1.4rem;">"But if foundation models increasingly provide these control capabilities natively, how durable is that layer?"</blockquote>
+    </div>
+
+    <div style="margin-top:52px;">
+      <div class="eyebrow">Historical Context</div>
+      <h3 style="font-family:var(--serif); font-size:1.55rem; font-weight:400;">Comparative Context: Adept AI</h3>
+      <p>Adept illustrates the strategic and capital intensity associated with competing closer to the foundation-model and general-action layer.</p>
+      <p>This positioning may reduce Convey's direct exposure to the capital intensity of developing frontier models, while shifting the strategic challenge toward execution reliability, workflow infrastructure, and enterprise control.</p>
+      <p style="font-style:italic;">"If foundation capabilities continue improving, does Convey's architecture become more valuable—or easier to replicate?"</p>
+      <div class="compare-note">Used as comparative historical context only. No direct equivalence implied.</div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERLUDE -->
+<section class="section dark" id="s-interlude" data-title="Interlude">
+  <div class="wrap">
+    <div class="eyebrow">Analytical Interlude</div>
+    <h2 class="title">Founder-Market Fit vs. Founder Blind Spot</h2>
+    <div class="two-col">
+      <div>
+        <span class="tag fact">What We Know</span>
+        <h4 style="font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:#8AB8E0; margin:16px 0 10px;">Operational Advantage</h4>
+        <p style="color:var(--dark-ink);">Rohan Chopra spent approximately eight years at DoorDash. Will Harvey and Diego Canales previously built ClearMetal, acquired by project44.</p>
+        <p style="color:var(--dark-ink);">The founders' backgrounds provide experience in operational environments where complexity can often be represented through systems, workflows, integrations, and measurable constraints.</p>
+      </div>
+      <div>
+        <span class="tag hypo">Strategic Hypothesis</span>
+        <h4 style="font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:#E08A8A; margin:16px 0 10px;">Potential Blind Spot</h4>
+        <p style="color:var(--dark-ink);">Some enterprise processes may introduce a different category of complexity: informal workarounds, subjective judgment, undocumented context, and organizational negotiation.</p>
+        <p style="color:var(--dark-ink); font-style:italic;">"Does experience in systematizing operational complexity transfer cleanly to workflows where critical context may resist formalization?"</p>
+      </div>
+    </div>
+    <p style="margin-top:32px; font-family:var(--serif); font-size:1.35rem; font-style:italic; color:var(--dark-ink);">"Technology is built by people. The market will determine whether these assumptions become an advantage or a constraint."</p>
+    <p class="small" style="color:#999; margin-top:24px;">Regardless of founder background, the market decides. Where is Convey actually finding traction?</p>
+  </div>
+</section>
+
+<!-- ACT II -->
+<section class="section" id="s-act2" data-title="Act II">
+  <div class="wrap">
+    <div class="eyebrow">Act II</div>
+    <h2 class="title">The Customer Pattern — Emergent Evidence</h2>
+    <p class="lead">Customer logos can demonstrate adoption. They cannot, by themselves, explain product-market fit. Instead of asking whether Convey has customers, we ask a harder question: what structural characteristics do its publicly documented deployments share?</p>
+    <p class="small">Methodology note — evidence strength reflects the specificity, traceability, and completeness of publicly available information. It does not score customer success or product performance.</p>
+
+    <div class="matrix-wrap">
+      <table class="table matrix" id="matrix-table">
+        <thead><tr>
+          <th>Customer</th><th>Broken Workflow</th><th>System Fragmentation</th><th>API Constraint</th><th>Convey Intervention</th><th>Reported Outcome</th><th>Evidence Limitation</th><th>Strength</th>
+        </tr></thead>
+        <tbody id="matrix-body"></tbody>
+      </table>
+    </div>
+    <div class="cards-wrap" id="matrix-cards"></div>
+
+    <div class="modal-backdrop" id="dossier-modal">
+      <div class="modal">
+        <button class="close" aria-label="Close">×</button>
+        <div id="modal-content"></div>
+      </div>
+    </div>
+
+    <div style="margin-top:62px;">
+      <div class="eyebrow">Act II Synthesis</div>
+      <span class="tag infer">Analytical Synthesis</span>
+      <h3 style="font-family:var(--serif); font-size:1.55rem; font-weight:400;">The Pattern That Emerges</h3>
+      <p>Across these diverse industries, a structural commonality appears where public evidence is sufficient to identify it.</p>
+      <div class="equation">
+        <span>Multiple Systems</span><span class="op">×</span><span>Limited Interoperability</span><span class="op">×</span><span>Repetitive Action</span><span class="op">=</span><span class="result">A Potential Convey Sweet Spot</span>
+      </div>
+    </div>
+
+    <div style="margin-top:52px;">
+      <span class="tag unknown">What We Still Cannot Know</span>
+      <h3 style="font-family:var(--serif); font-size:1.55rem; font-weight:400;">What The Case Studies Do Not Show</h3>
+      <ol class="missing-list">
+        <li><span class="num">01</span><strong>Maintenance Burden</strong>How much human effort is required to keep deployed workflows functioning over time?</li>
+        <li><span class="num">02</span><strong>Exception Frequency</strong>How often do digital teammates encounter cases requiring human intervention?</li>
+        <li><span class="num">03</span><strong>Implementation Effort</strong>How much technical work is required before deployment?</li>
+        <li><span class="num">04</span><strong>Unit Economics</strong>Do customer savings and delivery costs improve as deployments scale?</li>
+        <li><span class="num">05</span><strong>Representativeness</strong>Are public case studies typical deployments or selected best-case outcomes?</li>
+      </ol>
+      <p class="small" style="font-style:italic;">The public evidence suggests where Convey can create value. It does not tell us how much human infrastructure is required to deliver that value. That leads to the next question: who is doing the implementation work, and can that model scale?</p>
+    </div>
+  </div>
+</section>
+
+<!-- ACT III -->
+<section class="section" id="s-act3" data-title="Act III">
+  <div class="wrap">
+    <div class="eyebrow">Act III</div>
+    <h2 class="title">The Scaling Question — FDE Hypotheses</h2>
+    <p class="lead">Public signals around Forward Deployed Engineers are analytically important but ambiguous. FDE hiring alone does not prove implementation complexity.</p>
+
+    <div class="hyp-toggle" role="tablist" aria-label="Competing FDE hiring hypotheses">
+      <button class="active" data-hyp="a" role="tab" aria-selected="true">Hypothesis A — Implementation Complexity</button>
+      <button data-hyp="b" role="tab" aria-selected="false">Hypothesis B — Demand Acceleration</button>
+    </div>
+    <div class="hyp-panels">
+      <div class="hyp-panel active" id="hyp-a">
+        <div class="field"><div class="field-label">Supporting Logic</div><p style="margin:0;">Enterprise integrations, security requirements, workflow mapping, exceptions, and customer-specific environments require substantial human implementation work.</p></div>
+        <div class="field"><div class="field-label">Strategic Implication</div><p style="margin:0;">Convey could face services-like scaling pressure if deployment effort grows proportionally with customers or revenue.</p></div>
+        <div class="field"><div class="field-label">What Would Strengthen This</div><p style="margin:0;">FDE headcount growing at a similar rate to customer count or revenue over multiple periods.</p></div>
+        <div class="field"><div class="field-label">What Would Weaken This</div><p style="margin:0;">Evidence that deployment time per customer is shrinking as the platform matures.</p></div>
+      </div>
+      <div class="hyp-panel" id="hyp-b">
+        <div class="field"><div class="field-label">Supporting Logic</div><p style="margin:0;">FDE growth may represent temporary human bridge-building during rapid demand growth. Engineers may be creating reusable deployment infrastructure, templates, abstractions, and product improvements.</p></div>
+        <div class="field"><div class="field-label">Strategic Implication</div><p style="margin:0;">Human deployment effort per customer could decline as the platform matures.</p></div>
+        <div class="field"><div class="field-label">What Would Strengthen This</div><p style="margin:0;">Evidence of reusable templates, faster onboarding cycles, or declining FDE-to-customer ratios over time.</p></div>
+        <div class="field"><div class="field-label">What Would Weaken This</div><p style="margin:0;">Continued proportional FDE hiring alongside customer growth with no efficiency gains.</p></div>
+      </div>
+      <div class="missing-metric">
+        <div class="field-label">The Missing Metric</div>
+        <p style="margin:0 0 10px;"><strong>FDE Headcount Growth vs. ARR Growth</strong></p>
+        <p style="margin:0;">If ARR grows substantially faster than FDE headcount, this would support improving deployment leverage. If FDE headcount and ARR scale approximately together, this could suggest services-like scaling pressure.</p>
+        <p class="small" style="margin-top:12px;">This is explanatory logic only. No public ratio is available. <span class="tag unknown" style="margin:8px 0 0;">Data Unavailable Publicly</span></p>
+      </div>
+    </div>
+
+    <div style="margin-top:52px;">
+      <div class="eyebrow">Historical Context</div>
+      <h3 style="font-family:var(--serif); font-size:1.55rem; font-weight:400;">UiPath &amp; Builder.ai</h3>
+      <p><strong>UiPath</strong> — used as comparative context around automation maintenance, workflow fragility, and scaling complexity. Convey is not claimed to share UiPath's specific problems.</p>
+      <p><strong>Builder.ai</strong> — used as comparative context around why analysts should investigate the actual human infrastructure behind apparently automated systems. This is not a claim that Convey uses hidden human labor, and no direct equivalence is implied.</p>
+      <p class="small" style="font-style:italic; margin-top:16px;">Even if deployment scales, a deeper problem emerges once digital teammates are running with increasing autonomy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ACT IV -->
+<section class="section" id="s-act4" data-title="Act IV">
+  <div class="wrap">
+    <div class="eyebrow">Act IV</div>
+    <h2 class="title">The Autonomy Paradox — Knowledge Decay</h2>
+    <p class="lead">This section explores a potential mechanism created by successful automation. It is a reasonable inference and potential mechanism — not a verified outcome at Convey.</p>
+
+    <div class="card">
+      <h4>Explanatory Model — Not Empirical Evidence</h4>
+      <div class="model-title">The GPS Effect</div>
+      <p>If someone relies on GPS for years, they may gradually stop remembering routes. When navigation fails in an unfamiliar situation, recovery becomes harder precisely because routine participation has declined.</p>
+    </div>
+
+    <h3 style="font-family:var(--serif); font-size:1.55rem; font-weight:400; margin-top:42px;">Oversight Debt Mechanism Map</h3>
+    <div class="mech-flow">
+      <div class="mech-row" id="mech-main">
+        <div class="mech-node" data-mech="coverage">Automation Coverage</div>
+        <div class="mech-arrow">→</div>
+        <div class="mech-node" data-mech="reduced">Reduced Routine Human Participation</div>
+        <div class="mech-arrow">→</div>
+        <div class="mech-node" data-mech="decay">Potential Knowledge Decay</div>
+        <div class="mech-arrow">→</div>
+        <div class="mech-node" data-mech="exception">Rare Exception</div>
+      </div>
+      <div class="mech-detail" id="mech-detail">
+        <p id="mech-detail-text" style="margin:0;"></p>
+      </div>
+      <div class="mech-branches">
+        <div class="mech-branch">
+          <h5>Weak Observability</h5>
+          <div class="b-step">Recovery Friction</div>
+          <div class="b-step">Slow Diagnosis</div>
+          <div class="b-step">Operational Drag</div>
+        </div>
+        <div class="mech-branch">
+          <h5>Strong Observability</h5>
+          <div class="b-step">Controlled Intervention</div>
+          <div class="b-step">Workflow Recovery</div>
+          <div class="b-step">Organizational Learning</div>
+        </div>
+      </div>
+      <p class="small" style="margin-top:18px;">The visualization demonstrates that autonomy alone is not the complete variable. Observability and recovery infrastructure may determine whether reduced human participation becomes operational debt.</p>
+    </div>
+    <p class="small" style="font-style:italic; margin-top:24px;">This creates a collision between three systemic forces: Scale, Autonomy, and Control.</p>
+  </div>
+</section>
+
+<!-- ACT V -->
+<section class="section dark" id="s-act5" data-title="Act V">
+  <div class="wrap">
+    <div class="eyebrow">Act V</div>
+    <h2 class="title">The Collision — The Human Bottleneck System Map</h2>
+    <p class="lead" style="color:var(--dark-ink);">Three systemic forces collide as digital labor scales. Select each to explore its pressures and feedback loops.</p>
+
+    <div class="system-map" role="group" aria-label="Human bottleneck system map">
+      <button class="system-node" data-sys="scale">
+        <h4>Scale</h4>
+        <p class="small">Growth in customers, workflow coverage, digital teammates, deployment volume, and integration complexity.</p>
+      </button>
+      <button class="system-node" data-sys="autonomy">
+        <h4>Autonomy</h4>
+        <p class="small">Reduced routine human participation and increasing dependence on automated execution.</p>
+      </button>
+      <button class="system-node" data-sys="control">
+        <h4>Control</h4>
+        <p class="small">Observability, exception detection, human intervention, governance, workflow updating, and recovery infrastructure.</p>
+      </button>
+    </div>
+
+    <div class="system-detail" id="system-detail">
+      <div class="field"><div class="field-label">What Increases</div><p id="sd-increases" style="margin:0; color:var(--dark-ink);"></p></div>
+      <div class="field"><div class="field-label">Pressure It Creates</div><p id="sd-pressure" style="margin:0; color:var(--dark-ink);"></p></div>
+      <div class="field"><div class="field-label">Systems Affected</div><p id="sd-affects" style="margin:0; color:var(--dark-ink);"></p></div>
+      <div class="field"><div class="field-label">Feedback Loop</div><p id="sd-feedback" style="margin:0; color:var(--dark-ink);"></p></div>
+      <div class="field"><div class="field-label">Key Uncertainty</div><p id="sd-uncertainty" style="margin:0; color:var(--dark-ink);"></p></div>
+    </div>
+
+    <div class="tension-row">
+      <div class="tension"><strong>Scale ↔ Autonomy</strong> — More automated coverage may reduce routine human participation.</div>
+      <div class="tension"><strong>Autonomy ↔ Control</strong> — Less human participation may increase dependence on observability and recovery infrastructure.</div>
+      <div class="tension"><strong>Control ↔ Scale</strong> — More deployments and workflows increase the surface area requiring governance, monitoring, maintenance, and exception handling.</div>
+    </div>
+
+    <div style="margin-top:42px;">
+      <span class="tag hypo">Strategic Hypothesis</span>
+      <h3 style="font-family:var(--serif); font-size:1.7rem; font-weight:400; color:var(--dark-ink);">The Human Bottleneck Paradox</h3>
+      <p style="color:var(--dark-ink);">As digital labor scales, the human role may shift away from direct execution toward implementation, supervision, maintenance, intervention, and recovery. The strategic question is whether this control infrastructure can scale faster than the complexity it is designed to manage.</p>
+    </div>
+
+    <div class="card" style="border-color:rgba(242,239,232,0.24);">
+      <h4 style="color:#C7A76C;">Explanatory Model — Not Empirical Evidence</h4>
+      <div class="model-title" style="color:var(--dark-ink);">The Manager of 100 Digital Employees</div>
+      <p style="color:var(--dark-ink);">Imagine one manager supervising 100 digital employees. They work quickly and continuously. But when one fails, the manager must diagnose why, even though they may not have manually performed that workflow in months.</p>
+      <p style="color:var(--dark-ink); font-style:italic;">The AI scaled. Did the management infrastructure?</p>
+    </div>
+    <p class="small" style="color:#999; margin-top:16px; font-style:italic;">So, what is the verdict? Can Convey solve the paradox it has identified?</p>
+  </div>
+</section>
+
+<!-- EPILOGUE -->
+<section class="section" id="s-epilogue" data-title="Epilogue">
+  <div class="wrap">
+    <div class="eyebrow">Epilogue</div>
+    <h2 class="title">Strategic Verdict &amp; The Control Infrastructure Opportunity</h2>
+
+    <div style="margin-top:24px;">
+      <span class="tag fact">What We Know</span>
+      <p>Public evidence suggests Convey has created meaningful customer value in documented deployments.</p>
+    </div>
+    <div>
+      <span class="tag infer">What The Evidence Suggests</span>
+      <p>Convey may have identified an important strategic layer between increasingly capable AI models and reliable enterprise execution.</p>
+    </div>
+    <div>
+      <span class="tag unknown">What We Still Cannot Know</span>
+      <p>The decisive economic question remains unresolved: can digital workforce deployment scale materially faster than the human infrastructure required to implement, supervise, maintain, and recover it?</p>
+    </div>
+    <div>
+      <span class="tag hypo">Strategic Hypothesis</span>
+      <p>A strategically plausible opportunity exists around becoming increasingly important control infrastructure for digital labor. This is a possibility. Not a guaranteed outcome.</p>
+    </div>
+
+    <h3 style="font-family:var(--serif); font-size:1.55rem; font-weight:400; margin-top:48px;">Potential Sources of Durable Value</h3>
+    <div class="value-layers" id="value-layers"></div>
+
+    <div style="margin-top:52px;">
+      <div class="eyebrow">Final Decisive Questions</div>
+      <ul class="final-q">
+        <li>Can deployment become increasingly self-service?</li>
+        <li>Can observability scale faster than workflow complexity?</li>
+        <li>Where will durable value accumulate in the digital labor stack?</li>
+      </ul>
+      <blockquote class="central">"Can Convey automate the infrastructure required to scale automation itself?"</blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- APPENDIX -->
+<section class="section" id="s-appendix" data-title="Appendix">
+  <div class="wrap">
+    <div class="eyebrow">Appendix</div>
+    <h2 class="title">Methodology, Evidence Standards, Limitations &amp; Sources</h2>
+
+    <div class="appendix-grid">
+      <div>
+        <h4>Methodology</h4>
+        <p>Hypothesis → Evidence → Analysis → Alternative Explanations → Missing Evidence → Strategic Verdict.</p>
+      </div>
+      <div>
+        <h4>Evidence Standards</h4>
+        <ul>
+          <li><strong>Verified Fact</strong> — supported by credible public evidence.</li>
+          <li><strong>Reasonable Inference</strong> — a plausible reading of available evidence.</li>
+          <li><strong>Strategic Hypothesis</strong> — a proposition under investigation, not established.</li>
+          <li><strong>Competing Hypotheses</strong> — multiple plausible explanations evidence cannot distinguish.</li>
+          <li><strong>Explanatory Model</strong> — an analogy used only to explain a mechanism.</li>
+          <li><strong>Missing Evidence</strong> — an unresolved question, explicitly marked.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;">
+      <h4 style="font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--sub);">Limitations</h4>
+      <ul>
+        <li>Internal unit economics unavailable</li>
+        <li>FDE / ARR ratio unavailable</li>
+        <li>Long-term maintenance data unavailable</li>
+        <li>Exception rates unavailable</li>
+        <li>Internal architecture details unavailable</li>
+        <li>Public case studies may not represent typical deployments</li>
+      </ul>
+    </div>
+
+    <div class="source-note">
+      SOURCES — This investigation relies on publicly available company case studies, product documentation, and founder/company public statements. Specific source URLs were not independently re-verified at build time and are intentionally omitted rather than fabricated. Readers seeking primary verification should consult Convey's public case study library and founder interviews directly.
+    </div>
+  </div>
+</section>
+
+<div class="footer-note">CONVEY — THE HUMAN BOTTLENECK PARADOX &nbsp;·&nbsp; AN INDEPINDENT STRATEGIC INVESTIGATION &nbsp;·&nbsp; BUILT BY MUHAMAD REVA RIZA AKBAR</div>
+
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Progress bar */
+  var progress = document.getElementById('progress');
+  function updateProgress(){
+    var h = document.documentElement;
+    var scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progress.style.width = (isFinite(scrolled)?scrolled:0) + '%';
+  }
+  document.addEventListener('scroll', updateProgress, {passive:true});
+  updateProgress();
+
+  /* Nav dots */
+  var sections = Array.prototype.slice.call(document.querySelectorAll('.section[data-title]'));
+  var navdots = document.getElementById('navdots');
+  sections.forEach(function(sec){
+    var b = document.createElement('button');
+    b.setAttribute('aria-label', 'Go to ' + sec.getAttribute('data-title'));
+    b.addEventListener('click', function(){ sec.scrollIntoView({behavior:'smooth'}); });
+    navdots.appendChild(b);
+  });
+  var dotButtons = Array.prototype.slice.call(navdots.querySelectorAll('button'));
+  function updateDots(){
+    var mid = window.scrollY + window.innerHeight/2;
+    var activeIdx = 0;
+    sections.forEach(function(sec, i){
+      if(sec.offsetTop <= mid) activeIdx = i;
+    });
+    dotButtons.forEach(function(b,i){ b.classList.toggle('active', i===activeIdx); });
+  }
+  document.addEventListener('scroll', updateDots, {passive:true});
+  updateDots();
+
+  /* Architecture accordion */
+  document.querySelectorAll('.arch .layer-head').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var layer = btn.closest('.layer');
+      var isOpen = layer.getAttribute('data-open') === 'true';
+      document.querySelectorAll('.arch .layer').forEach(function(l){
+        l.setAttribute('data-open','false');
+        l.querySelector('.layer-head').setAttribute('aria-expanded','false');
+      });
+      if(!isOpen){
+        layer.setAttribute('data-open','true');
+        btn.setAttribute('aria-expanded','true');
+      }
+    });
+  });
+
+  /* Customer Matrix */
+  var customers = [
+    {name:"Savoya", workflow:"Inbound reservations", frag:"Public evidence insufficient", api:"Public evidence insufficient",
+     intervention:"Reservation intake automation", outcome:"40% EBITDA increase (YoY)", limitation:"Maintenance cost unknown", strength:"stronger",
+     dossier:[
+       {label:"The Workflow", text:"Inbound reservation workflows involving significant manual operations."},
+       {label:"Why Existing Approaches Were Insufficient", text:"Internal engineering efforts had struggled to automate the process."},
+       {label:"What Convey Changed", text:"Digital teammates deployed to handle reservation intake and processing."},
+       {label:"Reported Outcome", text:"40% year-over-year EBITDA increase. Approximately 10,000 work hours expected to be saved in 2026."},
+       {label:"Evidence Limitation", text:"Public evidence does not establish how much of the EBITDA improvement was directly caused by Convey. Long-term maintenance cost is unknown."},
+       {label:"Source / Evidence Note", text:"Company-reported outcomes. Public case study documentation."}
+     ]},
+    {name:"Faire", workflow:"Invoice processing", frag:"External shipping portals", api:"Some systems lacked usable APIs",
+     intervention:"Public evidence insufficient", outcome:"Hundreds of hours saved", limitation:"Exception rate unknown", strength:"stronger",
+     dossier:[
+       {label:"The Workflow", text:"Invoice processing across external shipping portals."},
+       {label:"Why Existing Approaches Were Insufficient", text:"Some systems lacked usable APIs for traditional automation."},
+       {label:"What Convey Changed", text:"Public evidence insufficient."},
+       {label:"Reported Outcome", text:"Hundreds of hours of manual processing automated."},
+       {label:"Evidence Limitation", text:"Success in repetitive low-API workflows does not prove success in highly subjective or complex decision workflows."},
+       {label:"Source / Evidence Note", text:"Public case study documentation."}
+     ]},
+    {name:"NBCUniversal", workflow:"Ad ops & reporting", frag:"Multiple dashboards", api:"Fragmented data sources",
+     intervention:"Campaign pacing monitoring", outcome:"Public evidence insufficient for precise outcome attribution", limitation:"ROI detail insufficient", strength:"limited",
+     dossier:[
+       {label:"The Workflow", text:"Advertising operations and reporting across multiple systems."},
+       {label:"Why Existing Approaches Were Insufficient", text:"Work required across multiple disconnected dashboards."},
+       {label:"What Convey Changed", text:"Automated monitoring of campaign pacing and operational reporting."},
+       {label:"Reported Outcome", text:"Public evidence insufficient for precise outcome attribution."},
+       {label:"Evidence Limitation", text:"Publicly available evidence does not provide sufficient detail to independently calculate ROI or maintenance burden."},
+       {label:"Source / Evidence Note", text:"Public case study documentation."}
+     ]},
+    {name:"Ewing Outdoor", workflow:"Order processing", frag:"Not publicly disclosed", api:"Not publicly disclosed",
+     intervention:"Routine data entry", outcome:"Labor reallocation", limitation:"Cost-benefit unknown", strength:"limited",
+     dossier:[
+       {label:"The Workflow", text:"Repetitive order processing tasks."},
+       {label:"Why Existing Approaches Were Insufficient", text:"Public evidence insufficient."},
+       {label:"What Convey Changed", text:"Automation of routine data entry."},
+       {label:"Reported Outcome", text:"Several employees were reportedly moved away from repetitive processing toward customer-facing activities."},
+       {label:"Evidence Limitation", text:"Public evidence does not provide complete cost-benefit calculations."},
+       {label:"Source / Evidence Note", text:"Public case study documentation."}
+     ]},
+    {name:"Northwest Meat", workflow:"Nightly order processing", frag:"Not publicly disclosed", api:"Not publicly disclosed",
+     intervention:"After-hours automation", outcome:"After-hours coverage", limitation:"Reliability unknown", strength:"limited",
+     dossier:[
+       {label:"The Workflow", text:"Repetitive nightly order processing outside normal working hours."},
+       {label:"Why Existing Approaches Were Insufficient", text:"Public evidence insufficient."},
+       {label:"What Convey Changed", text:"Digital teammates handling after-hours volume."},
+       {label:"Reported Outcome", text:"Processing continued outside normal working hours."},
+       {label:"Evidence Limitation", text:"Public evidence does not reveal long-term reliability or exception rates."},
+       {label:"Source / Evidence Note", text:"Public case study documentation."}
+     ]}
+  ];
+
+  var matrixBody = document.getElementById('matrix-body');
+  var cardsWrap = document.getElementById('matrix-cards');
+  var modal = document.getElementById('dossier-modal');
+  var modalContent = document.getElementById('modal-content');
+
+  function dossierHTML(c){
+    var html = '<h4 style="font-family:var(--serif); font-size:1.6rem; margin-bottom:4px;">'+c.name+'</h4>';
+    html += '<div class="small" style="margin-bottom:18px;">Evidence Strength: '+(c.strength==='stronger'?'Stronger Public Evidence':'Limited Public Evidence')+'</div>';
+    c.dossier.forEach(function(f){
+      html += '<div class="field"><div class="field-label">'+f.label+'</div><p style="margin:0;">'+f.text+'</p></div>';
+    });
+    return html;
+  }
+
+  customers.forEach(function(c, idx){
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td><strong>'+c.name+'</strong></td><td>'+c.workflow+'</td><td>'+c.frag+'</td><td>'+c.api+'</td><td>'+c.intervention+'</td><td>'+c.outcome+'</td><td>'+c.limitation+'</td><td class="'+(c.strength==='stronger'?'strength-strong':'strength-limited')+'">'+(c.strength==='stronger'?'Stronger':'Limited')+'</td>';
+    tr.tabIndex = 0;
+    tr.setAttribute('role','button');
+    tr.setAttribute('aria-label','View '+c.name+' dossier');
+    function openModal(){
+      modalContent.innerHTML = dossierHTML(c);
+      modal.classList.add('open');
+      modal.querySelector('.close').focus();
+    }
+    tr.addEventListener('click', openModal);
+    tr.addEventListener('keypress', function(e){ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); openModal(); }});
+    matrixBody.appendChild(tr);
+
+    var card = document.createElement('div');
+    card.className = 'dossier-card';
+    card.innerHTML = '<h4>'+c.name+'</h4><div class="meta">'+c.workflow+' &middot; '+(c.strength==='stronger'?'Stronger Evidence':'Limited Evidence')+'</div>'+
+      '<div><strong>Reported Outcome:</strong> '+c.outcome+'</div>'+
+      '<button class="expand-btn" aria-expanded="false">View Full Dossier</button>'+
+      '<div class="dossier-detail" data-open="false"></div>';
+    var detail = card.querySelector('.dossier-detail');
+    var expandBtn = card.querySelector('.expand-btn');
+    expandBtn.addEventListener('click', function(){
+      var open = detail.getAttribute('data-open') === 'true';
+      if(!open){
+        detail.innerHTML = c.dossier.map(function(f){
+          return '<div class="field"><div class="field-label">'+f.label+'</div><p style="margin:0;">'+f.text+'</p></div>';
+        }).join('');
+      }
+      detail.setAttribute('data-open', String(!open));
+      expandBtn.setAttribute('aria-expanded', String(!open));
+      expandBtn.textContent = !open ? 'Hide Dossier' : 'View Full Dossier';
+    });
+    cardsWrap.appendChild(card);
+  });
+
+  modal.querySelector('.close').addEventListener('click', function(){ modal.classList.remove('open'); });
+  modal.addEventListener('click', function(e){ if(e.target === modal){ modal.classList.remove('open'); }});
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ modal.classList.remove('open'); }});
+
+  /* FDE Hypothesis toggle */
+  var hypButtons = document.querySelectorAll('.hyp-toggle button');
+  hypButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      hypButtons.forEach(function(b){ b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      btn.classList.add('active'); btn.setAttribute('aria-selected','true');
+      document.querySelectorAll('.hyp-panel').forEach(function(p){ p.classList.remove('active'); });
+      document.getElementById('hyp-'+btn.dataset.hyp).classList.add('active');
+    });
+  });
+
+  /* Mechanism map */
+  var mechData = {
+    coverage: "As Convey's automation covers more of a workflow, fewer humans routinely execute that workflow themselves.",
+    reduced: "With fewer humans performing the task manually, day-to-day familiarity with its edge cases may fade over time.",
+    decay: "Reduced hands-on participation can plausibly lead to a gradual erosion of tacit workflow knowledge across a team.",
+    exception: "Eventually, an unusual case arises that automated logic was not built to handle, requiring human judgment."
+  };
+  var mechNodes = document.querySelectorAll('.mech-node');
+  var mechDetail = document.getElementById('mech-detail');
+  var mechDetailText = document.getElementById('mech-detail-text');
+  mechNodes.forEach(function(node){
+    node.addEventListener('click', function(){
+      mechNodes.forEach(function(n){ n.classList.remove('active'); });
+      node.classList.add('active');
+      mechDetailText.textContent = mechData[node.dataset.mech];
+      mechDetail.classList.add('open');
+    });
+  });
+
+  /* System Map */
+  var systemData = {
+    scale: {
+      increases: "Number of customers, workflows automated, digital teammates deployed, and integration surface area.",
+      pressure: "Greater scale multiplies the number of workflows that must be monitored, maintained, and governed.",
+      affects: "Places direct pressure on Control (more surface area to govern) and indirectly on Autonomy (more workflows running with less direct human touch).",
+      feedback: "As Scale increases Autonomy's footprint, the burden returns to Control, which if under-resourced can create pressure to slow further Scale.",
+      uncertainty: "Whether Control infrastructure investment is proportional to, ahead of, or lagging behind Scale growth is not publicly known."
+    },
+    autonomy: {
+      increases: "The proportion of workflow execution happening without direct, routine human involvement.",
+      pressure: "Reduced human familiarity with workflows increases dependence on automated systems functioning correctly.",
+      affects: "Increases the load on Control (observability and recovery must compensate for reduced human familiarity) and is itself a product of Scale.",
+      feedback: "Higher Autonomy without corresponding Control investment can quietly erode the organization's ability to recover from failures, which may eventually constrain further Scale.",
+      uncertainty: "The actual rate of knowledge decay, if any, inside customer organizations is not observable from public evidence."
+    },
+    control: {
+      increases: "Observability tooling, exception handling processes, governance permissions, and recovery infrastructure.",
+      pressure: "Must expand to match both the surface area created by Scale and the reduced human familiarity created by Autonomy.",
+      affects: "Determines whether growth in Scale and Autonomy translates into operational debt or manageable, learning-oriented growth.",
+      feedback: "Strong Control can enable safer, faster Scale and Autonomy growth; weak Control can force a slowdown in both.",
+      uncertainty: "The maturity and completeness of Convey's actual internal control infrastructure is not publicly documented."
+    }
+  };
+  var sysButtons = document.querySelectorAll('.system-node');
+  var sysDetail = document.getElementById('system-detail');
+  sysButtons.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var key = btn.dataset.sys;
+      var wasOpen = btn.getAttribute('data-open') === 'true';
+      sysButtons.forEach(function(b){ b.setAttribute('data-open','false'); });
+      if(wasOpen){
+        sysDetail.classList.remove('open');
+        return;
+      }
+      btn.setAttribute('data-open','true');
+      var d = systemData[key];
+      document.getElementById('sd-increases').textContent = d.increases;
+      document.getElementById('sd-pressure').textContent = d.pressure;
+      document.getElementById('sd-affects').textContent = d.affects;
+      document.getElementById('sd-feedback').textContent = d.feedback;
+      document.getElementById('sd-uncertainty').textContent = d.uncertainty;
+      sysDetail.classList.add('open');
+    });
+  });
+
+  /* Value Layers */
+  var valueData = [
+    {name:"Foundation Models", exposure:"Convey does not appear to compete directly by building frontier foundation models.", defensibility:"Low direct exposure to frontier model capital intensity.", threat:"Continued dependence on third-party model providers for core capability.", unknown:"Which providers Convey relies on and under what commercial terms is not fully public."},
+    {name:"Computer Use", exposure:"Convey builds on top of computer-use style perception and interaction capability.", defensibility:"Potential differentiation through enterprise-specific tuning and reliability layers.", threat:"Foundation model providers increasingly ship native computer-use capabilities.", unknown:"Whether native model improvements will erode the need for a separate perception layer."},
+    {name:"Execution & Compilation", exposure:"Appears to be a core area of claimed technical differentiation.", defensibility:"Compiled, testable execution logic could reduce reliance on continuous AI improvisation.", threat:"Competitors or model providers could replicate compilation approaches over time.", unknown:"The actual robustness and edge-case coverage of the compilation layer is not independently verifiable."},
+    {name:"Workflow Knowledge", exposure:"Accumulated understanding of specific customer workflows through deployments.", defensibility:"Potential switching costs if workflow knowledge is deeply customer-specific.", threat:"Workflow knowledge could become stale if underlying customer processes change.", unknown:"How portable or reusable this knowledge is across customers is unclear."},
+    {name:"Governance & Identity", exposure:"Enterprise permissions, auditability, and organizational control features.", defensibility:"Enterprise buyers may require this regardless of underlying model quality.", threat:"Governance layers are increasingly commoditized across enterprise software categories.", unknown:"How differentiated Convey's governance capability is relative to competitors is not public."},
+    {name:"Observability & Recovery", exposure:"Infrastructure for detecting, diagnosing, and recovering from automation failures.", defensibility:"Directly addresses the Human Bottleneck Paradox if built well.", threat:"May be the least mature layer industry-wide, including at Convey.", unknown:"Whether this layer can scale faster than the complexity it is meant to manage is the central open question of this investigation."}
+  ];
+  var vlWrap = document.getElementById('value-layers');
+  valueData.forEach(function(v, i){
+    var el = document.createElement('div');
+    el.className = 'value-layer';
+    el.setAttribute('data-open','false');
+    el.innerHTML = '<button class="value-layer-head" aria-expanded="false"><span>'+String(i+1).padStart(2,'0')+' — '+v.name+'</span><span class="layer-plus">+</span></button>'+
+      '<div class="value-layer-body"><div class="value-layer-body-inner">'+
+      '<div><div class="field-label">Current Strategic Exposure</div><p style="margin:0;">'+v.exposure+'</p></div>'+
+      '<div><div class="field-label">Potential Defensibility Mechanism</div><p style="margin:0;">'+v.defensibility+'</p></div>'+
+      '<div><div class="field-label">Primary Threat</div><p style="margin:0;">'+v.threat+'</p></div>'+
+      '<div><div class="field-label">Key Unknown</div><p style="margin:0;">'+v.unknown+'</p></div>'+
+      '</div></div>';
+    var head = el.querySelector('.value-layer-head');
+    head.addEventListener('click', function(){
+      var isOpen = el.getAttribute('data-open') === 'true';
+      el.setAttribute('data-open', String(!isOpen));
+      head.setAttribute('aria-expanded', String(!isOpen));
+    });
+    vlWrap.appendChild(el);
+  });
+
+})();
+</script>
+</body>
+</html>
